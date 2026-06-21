@@ -1,0 +1,18 @@
+# Ignore data files — never commit these
+*.xlsx
+*.xlsm
+*.xls
+*.csv
+~$*
+*.pptx
+*.docx
+*.pdf
+*.lock
+
+# Ignore old/working HTML files except the ones we want
+*
+!.gitignore
+!index.html
+!adults_market_deepdives.html
+!acquisition_insights.html
+!deploy.sh
