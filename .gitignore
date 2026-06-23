@@ -1,4 +1,14 @@
-# Ignore data files — never commit these
+# ── Ignore everything by default ──────────────────────────
+*
+
+# ── Always include these ───────────────────────────────────
+!.gitignore
+!deploy.sh
+
+# ── Include ALL html files (new dashboards auto-included) ──
+!*.html
+
+# ── Never commit data files ────────────────────────────────
 *.xlsx
 *.xlsm
 *.xls
@@ -7,12 +17,5 @@
 *.pptx
 *.docx
 *.pdf
-*.lock
-
-# Ignore old/working HTML files except the ones we want
-*
-!.gitignore
-!index.html
-!adults_market_deepdives.html
-!acquisition_insights.html
-!deploy.sh
+*.zip
+*.json
