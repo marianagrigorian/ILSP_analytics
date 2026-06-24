@@ -27,17 +27,13 @@ rm -f .git/index.lock .git/HEAD.lock .git/MERGE_HEAD.lock .git/CHERRY_PICK_HEAD.
 # Stage only the HTML files
 git add index.html adults_market_deepdives.html acquisition_insights.html intakes_50plus.html .gitignore deploy.sh 2>/dev/null || true
 
-# Check if there's anything to commit
-if git diff --staged --quiet; then
-  echo "ℹ️   No changes detected. Dashboard is already up to date."
-  exit 0
+# Commit if there are staged changes
+if ! git diff --staged --quiet; then
+  DATE=$(date '+%Y-%m-%d %H:%M')
+  git commit -m "Dashboard update — $DATE"
 fi
 
-# Commit with today's date
-DATE=$(date '+%Y-%m-%d %H:%M')
-git commit -m "Dashboard update — $DATE"
-
-# Push
+# Always push (handles unpushed commits too)
 git push origin main
 
 echo ""
