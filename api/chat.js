@@ -10,14 +10,7 @@ module.exports = async function handler(req, res) {
 
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(500).json({
-      error: 'ANTHROPIC_API_KEY is not configured. Add it in Vercel → Settings → Environment Variables.',
-      _debug: {
-        keyExists: 'ANTHROPIC_API_KEY' in process.env,
-        keyLength: (process.env.ANTHROPIC_API_KEY || '').length,
-        totalEnvVars: Object.keys(process.env).length,
-        hasVercelEnv: !!process.env.VERCEL,
-        vercelEnv: process.env.VERCEL_ENV || 'unknown'
-      }
+      error: 'ANTHROPIC_API_KEY is not configured on the server.'
     });
   }
 
