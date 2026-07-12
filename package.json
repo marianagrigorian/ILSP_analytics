@@ -2,13 +2,10 @@
   "name": "ef-analytics",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "build": "echo 'No build step required'"
-  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": "18"
   }
 }
