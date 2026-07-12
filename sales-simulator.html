@@ -117,6 +117,19 @@ html,body{height:100%;font-family:'Futura','Century Gothic','Avenir',system-ui,s
 .btn-new{display:block;width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:16px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;text-align:center;margin-top:22px;transition:background .15s;letter-spacing:.02em}
 .btn-new:hover{background:#004e7a}
 
+/* ── API KEY SETUP ── */
+.setup-wrap{max-width:460px;margin:80px auto;padding:0 24px}
+.setup-card{background:#fff;border-radius:16px;padding:38px;box-shadow:0 4px 24px rgba(0,0,0,.1)}
+.setup-card h2{font-size:22px;font-weight:800;color:var(--blue);margin-bottom:8px}
+.setup-card p{font-size:13px;color:#667;line-height:1.65;margin-bottom:22px}
+.setup-input{width:100%;border:1.5px solid #d0d8e0;border-radius:8px;padding:12px 14px;font-family:inherit;font-size:13px;outline:none;margin-bottom:14px;transition:border-color .15s}
+.setup-input:focus{border-color:var(--lb)}
+.setup-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:14px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;transition:background .15s}
+.setup-btn:hover{background:#004e7a}
+.setup-note{font-size:11px;color:#aab;text-align:center;margin-top:12px;line-height:1.5}
+.key-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;cursor:pointer}
+.key-btn:hover{background:rgba(255,255,255,.22)}
+
 /* ── SPINNER ── */
 .spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
@@ -311,7 +324,7 @@ ONE THING TO REMEMBER
 // ════════════════════════════════════════════════════════════════════
 
 let S = {
-  screen: 'selector',
+  screen: localStorage.getItem('ef_sim_key') ? 'selector' : 'setup',
   segKey: null,
   msgs: [],
   turns: 0,
@@ -329,9 +342,13 @@ const MAX_TURNS = 15;
 // ════════════════════════════════════════════════════════════════════
 
 async function callAPI(messages, systemPrompt, model, maxTokens) {
+  const apiKey = localStorage.getItem('ef_sim_key') || '';
   const res = await fetch('/api/chat', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Api-Key': apiKey,
+    },
     body: JSON.stringify({ messages, systemPrompt, model: model || 'claude-haiku-4-5-20251001', maxTokens: maxTokens || 400 }),
   });
   const data = await res.json();
@@ -473,6 +490,7 @@ function topBar(showBack) {
     <h1>EF Analytics</h1>
     <span class="sub">${showBack?'':'Sales Simulator'}</span>
     <div class="spacer"></div>
+    <button class="key-btn" onclick="clearKey()" title="Change API key">🔑 API Key</button>
     <span class="badge">TRAINING TOOL</span>
   </div>`;
 }
@@ -664,9 +682,43 @@ function parseFeedback(text) {
   return html;
 }
 
+function renderSetup() {
+  return `${topBar(false)}
+  <div class="setup-wrap">
+    <div class="setup-card">
+      <h2>Connect your API key</h2>
+      <p>This simulator uses the Anthropic API. Paste your API key below — it's saved only in your browser and sent directly to Anthropic with each request.</p>
+      <input type="password" id="key-input" class="setup-input" placeholder="sk-ant-api03-…"
+        onkeydown="if(event.key==='Enter')saveKey()" />
+      <button class="setup-btn" onclick="saveKey()">Start Simulating →</button>
+      <div class="setup-note">Get your key at console.anthropic.com → API Keys<br>The key is only stored in this browser — never on any server.</div>
+    </div>
+  </div>`;
+}
+
+function saveKey() {
+  const val = (document.getElementById('key-input').value || '').trim();
+  if (!val.startsWith('sk-ant')) {
+    alert('Please enter a valid Anthropic API key (starts with sk-ant...)');
+    return;
+  }
+  localStorage.setItem('ef_sim_key', val);
+  S.screen = 'selector';
+  render();
+}
+
+function clearKey() {
+  if (confirm('Clear the saved API key and return to setup?')) {
+    localStorage.removeItem('ef_sim_key');
+    S.screen = 'setup';
+    render();
+  }
+}
+
 function render() {
   const app = document.getElementById('app');
-  if (S.screen === 'selector') app.innerHTML = renderSelector();
+  if (S.screen === 'setup') app.innerHTML = renderSetup();
+  else if (S.screen === 'selector') app.innerHTML = renderSelector();
   else if (S.screen === 'chat') app.innerHTML = renderChat();
   else app.innerHTML = renderFeedback();
 }
