@@ -26,7 +26,7 @@ rm -f .git/index.lock .git/HEAD.lock .git/MERGE_HEAD.lock .git/CHERRY_PICK_HEAD.
 
 # Stage HTML files, simulator app, and API function
 git add index.html adults_market_deepdives.html acquisition_insights.html intakes_50plus.html \
-        sales-simulator.html api/chat.js package.json .gitignore deploy.sh 2>/dev/null || true
+        sales-simulator.html api/chat.js package.json vercel.json .gitignore deploy.sh 2>/dev/null || true
 
 # Commit if there are staged changes
 if ! git diff --staged --quiet; then
