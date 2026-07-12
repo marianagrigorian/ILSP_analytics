@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Pitch Simulator — EF Adults</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Futura','Century Gothic','Avenir',system-ui,sans-serif;background:#f0f3f7;color:#191919}
+:root{--blue:#003C64;--lb:#009EEB;--pink:#FF329B;--grad:#0072CE;--prof:#0055A0;--reset:#CC0066;--explor:#006B62}
+
+/* ── TOP BAR ── */
+.top-bar{background:var(--blue);color:#fff;padding:0 28px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25);flex-shrink:0}
+.accent-bar{width:4px;height:30px;background:var(--pink);border-radius:2px;flex-shrink:0}
+.top-bar h1{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.top-bar .sub{font-size:11px;opacity:.5;letter-spacing:.03em}
+.spacer{flex:1}
+.badge{background:var(--pink);color:#fff;font-size:9px;font-weight:800;padding:3px 9px;border-radius:4px;letter-spacing:.08em;text-transform:uppercase;flex-shrink:0}
+.back-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;cursor:pointer;transition:background .15s;white-space:nowrap}
+.back-btn:hover{background:rgba(255,255,255,.22)}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#003C64 55%,#005080);color:#fff;padding:44px 32px 38px;flex-shrink:0}
+.hero h2{font-size:30px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.hero h2 span{color:var(--pink)}
+.hero p{font-size:13px;opacity:.72;line-height:1.7;max-width:580px;margin-bottom:22px}
+.hero-steps{display:flex;gap:20px;flex-wrap:wrap}
+.hero-step{font-size:11px;opacity:.8;display:flex;align-items:center;gap:8px}
+.step-num{background:var(--pink);color:#fff;width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── SELECTOR ── */
+.sel-main{padding:28px 32px;max-width:1060px;margin:0 auto;width:100%}
+.section-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--lb);width:fit-content}
+.seg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+
+.seg-card{background:#fff;border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);border:none;text-align:left;font-family:inherit;width:100%;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.seg-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.seg-hd{padding:22px 20px 18px;color:#fff}
+.seg-num{font-size:11px;font-weight:800;opacity:.55;letter-spacing:.1em;margin-bottom:3px}
+.seg-name{font-size:21px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+.seg-sub{font-size:11px;opacity:.72;line-height:1.4}
+.seg-body{padding:16px 20px;flex:1}
+.seg-persona{font-size:15px;font-weight:800;color:#191919;margin-bottom:4px}
+.seg-desc{font-size:12px;color:#667;line-height:1.5}
+.seg-foot{padding:13px 20px;background:#f7f9fb;border-top:1px solid #eef1f4;display:flex;align-items:center;justify-content:space-between}
+.seg-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px}
+.seg-arrow{font-size:16px;color:#ccc;transition:color .15s}
+.seg-card:hover .seg-arrow{color:var(--lb)}
+
+/* ── CHAT LAYOUT ── */
+#chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 56px)}
+.chat-hd{background:#fff;padding:11px 24px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #e0e4ea;flex-shrink:0}
+.seg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.chat-seg-name{font-size:14px;font-weight:800;color:var(--blue)}
+.chat-seg-sub{font-size:11px;color:#778}
+.turn-pill{background:#f0f3f7;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:800;color:var(--blue);white-space:nowrap}
+.prog-bar{width:72px;height:4px;background:#e0e4ea;border-radius:2px;overflow:hidden;margin-top:3px}
+.prog-fill{height:100%;border-radius:2px;transition:width .3s}
+
+/* ── MESSAGES ── */
+.chat-msgs{flex:1;overflow-y:auto;padding:18px 24px;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch}
+.divider{text-align:center;font-size:10px;color:#aab;text-transform:uppercase;letter-spacing:.08em;padding:4px 0 8px}
+
+.msg{display:flex;gap:10px;max-width:82%}
+.msg.cust{align-self:flex-start}
+.msg.adv{align-self:flex-end;flex-direction:row-reverse}
+.msg-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:800}
+.msg-inner{display:flex;flex-direction:column;gap:2px}
+.msg-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.55}
+.msg.adv .msg-label{text-align:right}
+.msg-bub{padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.6}
+.msg.cust .msg-bub{background:#fff;border:1px solid #e0e4ea;color:#191919;border-radius:14px 14px 14px 3px}
+.msg.adv .msg-bub{background:var(--blue);color:#fff;border-radius:14px 14px 3px 14px}
+
+.typing-wrap{display:flex;gap:10px;align-self:flex-start}
+.typing-bub{background:#fff;border:1px solid #e0e4ea;border-radius:14px 14px 14px 3px;padding:12px 16px;display:flex;gap:5px;align-items:center}
+.td{width:7px;height:7px;border-radius:50%;background:#bbc;animation:blink 1.3s infinite}
+.td:nth-child(2){animation-delay:.22s}
+.td:nth-child(3){animation-delay:.44s}
+@keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+
+/* ── INPUT ── */
+.chat-inp{background:#fff;border-top:1px solid #e0e4ea;padding:13px 24px;flex-shrink:0}
+.inp-row{display:flex;gap:10px;align-items:flex-end}
+.chat-ta{flex:1;border:1.5px solid #d0d8e0;border-radius:10px;padding:10px 13px;font-family:inherit;font-size:13px;line-height:1.5;resize:none;outline:none;min-height:42px;max-height:110px;transition:border-color .15s}
+.chat-ta:focus{border-color:var(--lb)}
+.chat-ta:disabled{opacity:.5;cursor:not-allowed}
+.btn-send{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.btn-send:hover:not(:disabled){background:#004e7a}
+.btn-send:disabled{opacity:.5;cursor:not-allowed}
+.btn-end{background:#fff;color:var(--reset);border:2px solid var(--reset);border-radius:10px;padding:9px 15px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-end:hover:not(:disabled){background:var(--reset);color:#fff}
+.btn-end:disabled{opacity:.4;cursor:not-allowed}
+.inp-hint{font-size:10px;color:#aab;text-align:center;margin-top:7px}
+
+/* ── FEEDBACK ── */
+.fb-wrap{max-width:820px;margin:0 auto;padding:28px 24px 48px;width:100%}
+.score-banner{background:var(--blue);color:#fff;border-radius:14px;padding:28px 30px;margin-bottom:20px;display:flex;align-items:center;gap:28px}
+.score-num{font-size:60px;font-weight:800;line-height:1;color:var(--pink)}
+.score-denom{font-size:22px;opacity:.4;font-weight:800;align-self:flex-end;margin-bottom:6px}
+.score-info{flex:1}
+.score-label{font-size:18px;font-weight:800;margin-bottom:6px;line-height:1.3}
+.score-seg{font-size:11px;opacity:.55;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.score-bar-wrap{width:160px;height:7px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.score-turns{font-size:11px;opacity:.45;text-align:right;align-self:flex-start;white-space:nowrap}
+
+.fb-card{background:#fff;border-radius:12px;padding:22px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.fb-card h3{font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:13px;padding-bottom:10px;border-bottom:2px solid #f0f3f7;display:flex;align-items:center;gap:7px}
+.fb-section-icon{font-size:14px}
+.fb-content{font-size:13px;line-height:1.75;color:#334;white-space:pre-wrap}
+.fb-content strong,.fb-bold{font-weight:800;color:var(--blue)}
+.fb-good{color:#1D9E75;font-weight:700}
+.fb-bad{color:var(--reset);font-weight:700}
+.fb-quote{background:#f4f8fb;border-left:3px solid var(--lb);padding:6px 12px;border-radius:0 6px 6px 0;font-style:italic;color:#445;margin:6px 0}
+
+.btn-new{display:block;width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:16px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;text-align:center;margin-top:22px;transition:background .15s;letter-spacing:.02em}
+.btn-new:hover{background:#004e7a}
+
+/* ── SPINNER ── */
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* ── ERROR ── */
+.err-box{background:#fff2f5;border:1px solid #ffc0d0;color:#880022;padding:11px 16px;border-radius:8px;font-size:12px;margin:10px 0}
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay{position:fixed;inset:0;background:rgba(0,30,60,.7);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px}
+.loading-overlay .spin{width:32px;height:32px;border-width:3px}
+.loading-overlay p{color:#fff;font-size:14px;font-weight:700;opacity:.85}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+// SEGMENT CONFIG & PROMPTS
+// ════════════════════════════════════════════════════════════════════
+
+const SEG = {
+  graduate: {
+    color: '#0072CE', lightBg: '#EAF3FF',
+    num: '01', label: 'GRADUATE', sub: 'Instrumental · career & world unlocking',
+    persona: 'Sofia', age: 24, personaLine: 'Recent grad, stalling job search',
+    tagline: '"The edge your degree didn\'t give you."',
+    systemPrompt: `You are Sofia, 24 years old. You graduated 8 months ago with a Business degree and your job search has been frustrating — you've had several rejections and three of your friends already have international roles. You found EF on Instagram and booked a call.
+
+PERSONALITY: Smart, a bit guarded, cautiously hopeful. You don't want to be sold to but you genuinely hope this unlocks your career. Budget-conscious — your parents might co-fund this but they need to hear ROI, not adventure.
+
+LANGUAGE: Conversational, direct, occasionally a little skeptical. Realistic — not rude, just real.
+
+CONCERNS TO RAISE naturally across the conversation (spread them — don't dump them all at once):
+1. Will this actually help you get a job or is it just expensive language classes?
+2. Your parents think you should be job-hunting, not going on a course
+3. The cost — is it worth it when you have no income right now?
+4. Whether you'll be in class with teenagers
+5. What exactly the CASC certificate is and whether employers actually care about it
+6. Six weeks sounds really long — can you do something shorter?
+7. You've tried Duolingo — how is immersion actually different?
+8. What happens when you get back — is there real job support?
+
+REACT TO THE ADVISOR:
+Positively if they: give specific career outcome data or ROI, explain CASC as "a certificate you put on your CV showing verified language skills in a specific field", mention 6 weeks as standard but understand your constraint, cite the immersion research (11x faster), mention Study & Work or Job Club programmes
+Skeptically if they: say "adult-only", describe the certificate as "internationally recognized" without explaining it, say 2 or 4 weeks is fine as a starting point, give vague reassurance without substance
+
+After 12-15 exchanges, naturally close: "I think I have a much clearer picture now — I need to talk to my parents about the funding side but honestly I think this could actually work for me."
+
+START: Greet the advisor, say you've been looking at EF and wanted to know more about programs for recent graduates. You just graduated and aren't sure what your next step is. Keep each response to 2-4 sentences. Be uncertain but curious.`
+  },
+
+  professional: {
+    color: '#0055A0', lightBg: '#EAF0FF',
+    num: '02', label: 'PROFESSIONAL', sub: 'Aspirational · work & life mobility',
+    persona: 'Marco', age: 38, personaLine: 'Director of Ops, career blocked by language',
+    tagline: '"You know where you\'re going. We remove what\'s in the way."',
+    systemPrompt: `You are Marco, 38 years old. Director of Operations at a mid-sized company. You've been passed over twice for the VP EMEA role — the feedback was that your English in high-stakes boardroom contexts needs to be stronger. You've tried apps and evening classes; nothing has stuck. You're on a call with an EF advisor during your lunch break. Time is genuinely limited.
+
+PERSONALITY: Direct, slightly impatient, efficient. You've heard pitches before and cut through them fast. You want evidence and outcomes, not enthusiasm. You respect people who get to the point.
+
+LANGUAGE: Professional, clipped. Questions that cut to the chase.
+
+CONCERNS TO RAISE naturally over 10-15 turns:
+1. You've tried other things before — why will this actually work?
+2. Time away from work is your #1 constraint — you can barely take a week off
+3. Whether you'll be with people at your professional level, not teenagers
+4. The ROI — what does bilingual fluency actually unlock financially?
+5. Whether your company might sponsor this or if it comes out of your pocket
+6. What specific credentials you'll have to show your manager afterwards
+7. Destination preferences — you travel to London, Dublin, Singapore already
+8. What "professional course" actually means in practice (not just regular lessons)
+
+REACT TO THE ADVISOR:
+Positively if they: get to outcomes fast, give hard data (bilingual 10-20% premium, 6 weeks vs years of slow progress), specifically mention EF Pro Track / case studies / communication skills for professionals / 1:1 progress reviews, name specific career cities, address the time objection head-on with the reframe
+Negatively if they: use soft language or say "don't worry it'll be fine", say "adult-only", describe vague "professional content" without specifics, can't give numbers, suggest 2 or 4 weeks
+
+After 12-15 exchanges: "OK — this is actually more structured than I expected. The Pro Track curriculum and the 1:1 reviews are what I was looking for. I'll need to check the calendar and probably make a business case to HR."
+
+START: Introduce yourself as Marco. Say you have about 20 minutes before your next call. You want to know quickly whether EF's professional program is actually different from other language courses you've tried. Keep responses to 2-4 sentences. Business tone, time-pressured.`
+  },
+
+  resetter: {
+    color: '#CC0066', lightBg: '#FFF0F5',
+    num: '03', label: 'RESETTER', sub: 'Transformational · life & identity reset',
+    persona: 'Claudia', age: 47, personaLine: 'Empty nester, finally doing this for herself',
+    tagline: '"The thing you always meant to do — it\'s now."',
+    systemPrompt: `You are Claudia, 47 years old. Your two kids went to university last autumn and the house is suddenly quiet in a way you weren't ready for. You've worked in HR for 20 years. Your Spanish has stalled at school level and you've always meant to fix it. A close friend came back from 6 weeks in Málaga "a completely different person" and you've been researching EF ever since. You're talking to an EF advisor — half-excited, half-guilty.
+
+PERSONALITY: Thoughtful and warm but a little self-doubting. You feel slightly guilty about spending this much on yourself. You overthink. But underneath that you've basically already decided — you just need someone to confirm it's the right call, not push you.
+
+LANGUAGE: Reflective, warm, asks about the experience not just the logistics. Occasionally a bit emotional.
+
+CONCERNS TO RAISE naturally over 10-15 turns:
+1. Is this self-indulgent — spending this much just on yourself?
+2. Will you be too slow or too old to learn a language properly at 47?
+3. Will you be surrounded by students half your age and feel out of place?
+4. Can you go for less than 6 weeks — maybe 3 or 4 weeks to start?
+5. You've never travelled solo for this long — is it manageable?
+6. You want your own room — non-negotiable
+7. Your husband thinks a local class would be more sensible (he's cost-conscious)
+8. Which destination feels right — you want culture and language, not just a city trip
+9. What kind of people will you actually meet?
+
+REACT TO THE ADVISOR:
+Positively if they: validate the moment without being pushy, say "like-minded people at a similar life stage" (not "adult-only"), describe the first week vividly, mention the homestay option, give the brain health research point, name Culture Unlocked destinations (Rome, Málaga, Barcelona), mention you can break it into blocks
+Negatively if they: say "adult-only" (makes you feel othered and suspicious), suggest 4 weeks is probably fine, focus on logistics before experience, are pushy or salesy, raise age proactively as a "topic"
+
+After 12-15 exchanges: "I think I've actually made my mind up, honestly. I'm going to book Málaga. I'll tell my husband it's an investment. Can you send me details for the autumn cohort?"
+
+START: Say hello, say your friend had an amazing experience and you've been thinking about it for months. You're interested in Spain, possibly Italy. Say you're not sure if now is the right time — but you've been saying that for years. 2-4 sentences, warm and a little uncertain.`
+  },
+
+  explorer: {
+    color: '#006B62', lightBg: '#E8F5F3',
+    num: '04', label: 'EXPLORER', sub: 'Experiential · life adventure & discovery',
+    persona: 'Peter', age: 63, personaLine: 'Retired, ready for the next chapter',
+    tagline: '"Some people retire. Others explore."',
+    systemPrompt: `You are Peter, 63 years old. You retired from an engineering career 2 years ago. The first year was restful but you're feeling a bit restless now. Your granddaughter is growing up bilingual (Italian father) and you can't follow half of what she says. A former colleague who is 65 sent you photos from his EF stay in Rome and you've been looking at the website for weeks. You're talking to an EF advisor.
+
+PERSONALITY: Measured, slightly old-school, precise. You like facts and good logistics. You're not worried about "being too old" — that's not your concern — but you want the advisor to handle the topic with dignity, not make it into a thing. You appreciate quality and substance.
+
+LANGUAGE: Slightly formal but warm. Precise questions. Not easily rushed.
+
+CONCERNS TO RAISE naturally over 10-15 turns:
+1. Will the pace suit you — you want honest information, not flattery
+2. Who else will be in the group and whether you'll genuinely connect
+3. Logistics: what does EF handle vs what do you have to manage yourself
+4. Accommodation — single room, or possibly a homestay family?
+5. How long should you go for — you have time but not infinite patience for the wrong fit
+6. Value for money — you have the means but you want quality not luxury for its own sake
+7. Can you go back a second time if you enjoy it?
+8. Which destination — you want rich culture around the language
+
+REACT TO THE ADVISOR:
+Positively if they: lead with the community angle, use the brain health neuroscience point naturally, describe the first week experience in vivid detail, mention EF handles all logistics, bring up returning / second trip, name specific destinations with clear reasons (Malta, Rome, Málaga), mention homestay option
+Negatively if they: say "senior" or frame age as a limitation in any way, say "adult-only guaranteed" (makes you suspicious of overcompensating), focus too much on younger cohorts, push anything shorter than 6 weeks without reason
+
+After 12-15 exchanges: "I'm quite clear in my mind now. I'm thinking Malta as a first trip — it feels contained and the school has good reviews. Could you send me some information on the autumn dates?"
+
+START: Introduce yourself as Peter. Say a colleague recommended EF and you've been looking at the website. You're retired and thinking about finally learning Italian. What does the programme actually look like for someone in your situation? 2-4 sentences, calm and measured.`
+  }
+};
+
+// ════════════════════════════════════════════════════════════════════
+// FEEDBACK SYSTEM PROMPT
+// ════════════════════════════════════════════════════════════════════
+
+const FEEDBACK_SYS = `You are an expert EF Adults language travel sales training coach. You evaluate sales conversations between EF advisors and AI customer personas, based on the EF Adults Sales Script v5.5.
+
+THE RULES THE ADVISOR MUST FOLLOW:
+
+NEVER SAY:
+- "adult-only" or "adults-only guaranteed" → must say "like-minded people at a similar life stage" or "students grouped by level, not age"
+- "internationally recognized" for CASC → must say "a certificate you put on your CV showing verified language skills in a specific field"
+- "2 weeks" or "4 weeks" as the default → 6 weeks is the minimum meaningful stay (subscription: 3 x 2-week blocks is the workaround for duration objectors)
+- "escape", "getaway", "treat yourself" for Resetters or Explorers → this is a chapter, not a break
+- "senior", "elderly", "for your age", "still sharp" for Explorers → speak to appetite, not age
+
+ALWAYS DO:
+- Lead with outcomes, not features
+- Reference the EF Learning Guarantee (1 level every 6 weeks with full attendance, or study free)
+- Use 6 weeks as the standard; offer 3 x 2-week blocks for duration objectors
+- Compete on worth, not discount — anchor on ROI, not price
+- For Professionals: mention EF Pro Track, SPINs, 1:1 progress reviews, career cities, bilingual salary premium (10-20%)
+- For Graduates: explain CASC as "a certificate you put on your CV", mention Study & Work programmes (Job Club, Internship Experience), use immersion research (up to 11x faster)
+- For Resetters/Explorers: community framing ("like-minded people at a similar life stage"), mention loyal community (returners, referrers, ambassadors), "this trip is a chapter, not the whole story"
+- For Explorers: use the brain health / cognitive reserve neuroscience fact (bilingual adults show cognitive decline up to 5 years later)
+- Close with specifics: destination, departure timing, single room confirmation
+
+Evaluate the conversation carefully and respond in EXACTLY this format — use these exact section headers:
+
+SCORE: [number]/10
+
+WHAT WORKED WELL
+[3-4 specific things the advisor did well, with direct quotes where possible. Be specific — name the technique and show the evidence from the conversation.]
+
+WHAT TO IMPROVE
+[3-4 specific things to change. For each: what was said → what should have been said instead. Quote from the conversation.]
+
+LANGUAGE VIOLATIONS
+[List any never-say violations with the exact quote and the correct alternative. If none detected: No violations detected.]
+
+KEY MOMENT
+[Identify the single most pivotal exchange. Quote it. Explain how the advisor handled it and what the ideal response would have been.]
+
+ONE THING TO REMEMBER
+[The single most important takeaway for this advisor. Max 2 sentences. Make it specific, not generic.]`;
+
+// ════════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════════
+
+let S = {
+  screen: 'selector',
+  segKey: null,
+  msgs: [],
+  turns: 0,
+  loading: false,
+  loadingMsg: '',
+  err: null,
+  fbText: '',
+  fbScore: null,
+};
+
+const MAX_TURNS = 15;
+
+// ════════════════════════════════════════════════════════════════════
+// API
+// ════════════════════════════════════════════════════════════════════
+
+async function callAPI(messages, systemPrompt, model, maxTokens) {
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages, systemPrompt, model: model || 'claude-haiku-4-5-20251001', maxTokens: maxTokens || 400 }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'API error');
+  return data.content;
+}
+
+// ════════════════════════════════════════════════════════════════════
+// APP LOGIC
+// ════════════════════════════════════════════════════════════════════
+
+async function startSession(key) {
+  S = { screen: 'chat', segKey: key, msgs: [], turns: 0, loading: true, loadingMsg: 'Starting conversation…', err: null, fbText: '', fbScore: null };
+  render();
+  try {
+    const text = await callAPI(
+      [{ role: 'user', content: 'Start the conversation now as the customer.' }],
+      SEG[key].systemPrompt, 'claude-haiku-4-5-20251001', 220
+    );
+    S.msgs = [{ role: 'assistant', content: text }];
+    S.loading = false;
+    render();
+    scrollBottom();
+    focusInput();
+  } catch (e) {
+    S.loading = false;
+    S.err = e.message;
+    render();
+  }
+}
+
+async function sendMsg() {
+  const ta = document.getElementById('cta');
+  if (!ta) return;
+  const txt = ta.value.trim();
+  if (!txt || S.loading) return;
+  ta.value = '';
+  ta.style.height = 'auto';
+
+  S.msgs.push({ role: 'user', content: txt });
+  S.turns++;
+  S.loading = true;
+  S.loadingMsg = '';
+  S.err = null;
+  render();
+  scrollBottom();
+
+  const extra = S.turns >= 12
+    ? '\n\nYou are on turn ' + S.turns + ' of ' + MAX_TURNS + '. Start naturally winding down the conversation — you\'re reaching a decision point.'
+    : '';
+
+  try {
+    const reply = await callAPI(S.msgs, SEG[S.segKey].systemPrompt + extra, 'claude-haiku-4-5-20251001', 280);
+    S.msgs.push({ role: 'assistant', content: reply });
+    S.loading = false;
+    render();
+    scrollBottom();
+    if (S.turns >= MAX_TURNS) {
+      setTimeout(endSession, 1800);
+    } else {
+      focusInput();
+    }
+  } catch (e) {
+    S.loading = false;
+    S.err = e.message;
+    render();
+  }
+}
+
+async function endSession() {
+  S.loading = true;
+  S.loadingMsg = 'Analyzing your pitch…';
+  S.screen = 'feedback';
+  render();
+
+  const seg = SEG[S.segKey];
+  const transcript = S.msgs.map(m =>
+    (m.role === 'assistant' ? seg.persona + ' (Customer)' : 'EF Advisor (You)') + ': ' + m.content
+  ).join('\n\n');
+
+  const userMsg = `SEGMENT: ${seg.label} — ${seg.persona}, ${seg.age}
+
+FULL CONVERSATION:
+${transcript}
+
+Please evaluate this conversation using the required format.`;
+
+  try {
+    const fb = await callAPI(
+      [{ role: 'user', content: userMsg }],
+      FEEDBACK_SYS, 'claude-sonnet-5', 1400
+    );
+    const m = fb.match(/SCORE:\s*(\d+)\/10/);
+    S.fbScore = m ? parseInt(m[1]) : null;
+    S.fbText = fb;
+    S.loading = false;
+    render();
+    window.scrollTo(0, 0);
+  } catch (e) {
+    S.loading = false;
+    S.err = e.message;
+    render();
+  }
+}
+
+function reset() {
+  S = { screen: 'selector', segKey: null, msgs: [], turns: 0, loading: false, loadingMsg: '', err: null, fbText: '', fbScore: null };
+  render();
+  window.scrollTo(0, 0);
+}
+
+function scrollBottom() {
+  const el = document.getElementById('msgs');
+  if (el) setTimeout(() => { el.scrollTop = el.scrollHeight; }, 60);
+}
+
+function focusInput() {
+  const ta = document.getElementById('cta');
+  if (ta) setTimeout(() => ta.focus(), 80);
+}
+
+function growTA(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 110) + 'px';
+}
+
+// ════════════════════════════════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════════════════════════════════
+
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function topBar(showBack) {
+  return `<div class="top-bar">
+    <div class="accent-bar"></div>
+    ${showBack ? `<button class="back-btn" onclick="reset()">← Back</button>` : ''}
+    <h1>EF Analytics</h1>
+    <span class="sub">${showBack?'':'Sales Simulator'}</span>
+    <div class="spacer"></div>
+    <span class="badge">TRAINING TOOL</span>
+  </div>`;
+}
+
+function renderSelector() {
+  const cards = Object.entries(SEG).map(([k, s]) => `
+    <button class="seg-card" onclick="startSession('${k}')">
+      <div class="seg-hd" style="background:${s.color}">
+        <div class="seg-num">${s.num}</div>
+        <div class="seg-name">${s.label}</div>
+        <div class="seg-sub">${s.sub}</div>
+      </div>
+      <div class="seg-body">
+        <div class="seg-persona">${s.persona}, ${s.age}</div>
+        <div class="seg-desc">${s.personaLine}</div>
+      </div>
+      <div class="seg-foot">
+        <span class="seg-tag" style="background:${s.lightBg};color:${s.color}">${s.tagline.replace(/"/g,'')}</span>
+        <span class="seg-arrow">→</span>
+      </div>
+    </button>`).join('');
+
+  return `${topBar(false)}
+  <div class="hero">
+    <h2>Sales Pitch <span>Simulator</span></h2>
+    <p>Practice your EF Adults pitch with AI-powered customer personas. Each persona raises real objections from the v5.5 sales script. You get scored at the end.</p>
+    <div class="hero-steps">
+      <div class="hero-step"><span class="step-num">1</span> Choose a customer segment</div>
+      <div class="hero-step"><span class="step-num">2</span> Reply as the EF advisor</div>
+      <div class="hero-step"><span class="step-num">3</span> Get detailed feedback</div>
+    </div>
+  </div>
+  <div class="sel-main">
+    <div class="section-label">Choose a customer persona to practise with</div>
+    <div class="seg-grid">${cards}</div>
+  </div>`;
+}
+
+function renderChat() {
+  const seg = SEG[S.segKey];
+  const pct = Math.min((S.turns / MAX_TURNS) * 100, 100);
+  const hint = S.turns === 0 ? 'Conversation started — introduce yourself as the EF advisor!'
+    : S.turns < 5 ? 'Turn ' + S.turns + ' — build rapport, ask about their situation'
+    : S.turns < 10 ? 'Turn ' + S.turns + ' — address objections, anchor on value'
+    : S.turns < 14 ? 'Turn ' + S.turns + ' — start moving toward close'
+    : 'Turn ' + S.turns + ' — final stretch, close with specifics';
+
+  const bubbles = S.msgs.map(m => {
+    const isCust = m.role === 'assistant';
+    return `<div class="msg ${isCust ? 'cust' : 'adv'}">
+      <div class="msg-av" style="background:${isCust ? seg.color : 'var(--blue)'}">${isCust ? seg.persona[0] : 'Y'}</div>
+      <div class="msg-inner">
+        <div class="msg-label">${isCust ? seg.persona + ' (Customer)' : 'You — EF Advisor'}</div>
+        <div class="msg-bub">${esc(m.content)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const typing = S.loading && !S.loadingMsg ? `<div class="typing-wrap">
+    <div class="msg-av" style="background:${seg.color}">${seg.persona[0]}</div>
+    <div class="typing-bub"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+  </div>` : '';
+
+  const endBtn = S.turns >= 3
+    ? `<button class="btn-end" onclick="endSession()" ${S.loading?'disabled':''}>End &amp; Get Feedback</button>`
+    : '';
+
+  return `${topBar(true)}
+  <div id="chat-wrap">
+    <div class="chat-hd">
+      <div class="seg-dot" style="background:${seg.color}"></div>
+      <div style="flex:1">
+        <div class="chat-seg-name">${seg.label} — ${seg.persona}, ${seg.age}</div>
+        <div class="chat-seg-sub">${hint}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="turn-pill">Turn ${S.turns}/${MAX_TURNS}</div>
+        <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${seg.color}"></div></div>
+      </div>
+    </div>
+    <div class="chat-msgs" id="msgs">
+      <div class="divider">You are the EF Advisor · ${seg.persona} is your customer</div>
+      ${bubbles}
+      ${typing}
+      ${S.err ? `<div class="err-box">⚠ ${esc(S.err)} — please try again</div>` : ''}
+    </div>
+    <div class="chat-inp">
+      <div class="inp-row">
+        <textarea id="cta" class="chat-ta" placeholder="Type your response as the EF advisor…" rows="1"
+          ${S.loading ? 'disabled' : ''}
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
+          oninput="growTA(this)"></textarea>
+        <button class="btn-send" onclick="sendMsg()" ${S.loading?'disabled':''}>
+          ${S.loading ? '<span class="spin"></span>' : 'Send'}
+        </button>
+        ${endBtn}
+      </div>
+      <div class="inp-hint">Enter to send · Shift+Enter for new line · Aim for 10–15 exchanges</div>
+    </div>
+  </div>`;
+}
+
+function renderFeedback() {
+  const seg = SEG[S.segKey];
+  const sc = S.fbScore;
+  const barColor = !sc ? '#999' : sc >= 8 ? '#1D9E75' : sc >= 6 ? '#C87000' : '#CC0066';
+  const barW = sc ? (sc / 10) * 100 : 0;
+  const scoreLabel = !sc ? 'Analysis complete'
+    : sc >= 9 ? 'Exceptional pitch'
+    : sc >= 8 ? 'Strong pitch — minor refinements'
+    : sc >= 6 ? 'Solid foundation — clear improvements'
+    : sc >= 4 ? 'Developing — significant work needed'
+    : 'Needs fundamental rework';
+
+  if (S.loading) {
+    return `${topBar(false)}
+    <div class="loading-overlay">
+      <span class="spin"></span>
+      <p>${esc(S.loadingMsg)}</p>
+    </div>
+    <div class="fb-wrap"></div>`;
+  }
+
+  const fbCards = parseFeedback(S.fbText);
+
+  return `${topBar(false)}
+  <div class="fb-wrap">
+    <div class="score-banner">
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <div class="score-num">${sc !== null ? sc : '—'}</div>
+        <div class="score-denom">/10</div>
+      </div>
+      <div class="score-info">
+        <div class="score-seg">${seg.label} · ${seg.persona}, ${seg.age}</div>
+        <div class="score-label">${scoreLabel}</div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-fill" style="width:${barW}%;background:${barColor}"></div>
+        </div>
+      </div>
+      <div class="score-turns">${S.turns} exchange${S.turns!==1?'s':''}<br>completed</div>
+    </div>
+    ${S.err ? `<div class="err-box">⚠ ${esc(S.err)}</div>` : ''}
+    ${fbCards}
+    <button class="btn-new" onclick="reset()">← Start New Simulation</button>
+  </div>`;
+}
+
+function parseFeedback(text) {
+  if (!text) return '<div class="fb-card"><div class="fb-content">No feedback available.</div></div>';
+
+  const sections = [
+    { key: 'WHAT WORKED WELL', icon: '✅', accent: '#1D9E75' },
+    { key: 'WHAT TO IMPROVE', icon: '⚡', accent: '#C87000' },
+    { key: 'LANGUAGE VIOLATIONS', icon: '🚫', accent: '#CC0066' },
+    { key: 'KEY MOMENT', icon: '💡', accent: '#0055A0' },
+    { key: 'ONE THING TO REMEMBER', icon: '📌', accent: '#003C64' },
+  ];
+
+  // Remove the SCORE line (handled separately)
+  let cleaned = text.replace(/^SCORE:\s*\d+\/10\s*/m, '').trim();
+
+  let html = '';
+  sections.forEach(sec => {
+    const re = new RegExp(sec.key + '\\s*\\n([\\s\\S]*?)(?=\\n[A-Z][A-Z ]+\\s*\\n|$)');
+    const m = cleaned.match(re);
+    if (!m) return;
+    let body = m[1].trim();
+    // Convert quoted text to quote blocks
+    body = body.replace(/"([^"]+)"/g, '<span class="fb-quote">"$1"</span>');
+    // Bold key phrases
+    body = body.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Checkmarks
+    body = body.replace(/No violations detected\.?/g, '<span class="fb-good">✓ No violations detected.</span>');
+    // Newlines
+    body = body.replace(/\n/g, '<br>');
+
+    html += `<div class="fb-card">
+      <h3><span class="fb-section-icon">${sec.icon}</span> ${sec.key}</h3>
+      <div class="fb-content" style="border-left:3px solid ${sec.accent};padding-left:14px">${body}</div>
+    </div>`;
+  });
+
+  if (!html) {
+    // Fallback: display raw text
+    const formatted = esc(text).replace(/\n/g, '<br>');
+    html = `<div class="fb-card"><div class="fb-content">${formatted}</div></div>`;
+  }
+
+  return html;
+}
+
+function render() {
+  const app = document.getElementById('app');
+  if (S.screen === 'selector') app.innerHTML = renderSelector();
+  else if (S.screen === 'chat') app.innerHTML = renderChat();
+  else app.innerHTML = renderFeedback();
+}
+
+render();
+</script>
+</body>
+</html>
