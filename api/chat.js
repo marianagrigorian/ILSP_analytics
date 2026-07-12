@@ -1,3 +1,4 @@
+// EF Adults Sales Simulator — chat proxy
 const Anthropic = require('@anthropic-ai/sdk');
 
 module.exports = async function handler(req, res) {
