@@ -4,8 +4,5 @@
   "private": true,
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0"
-  },
-  "engines": {
-    "node": "18"
   }
 }
