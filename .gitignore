@@ -8,6 +8,12 @@
 # ── Include ALL html files (new dashboards auto-included) ──
 !*.html
 
+# ── Include server & config files ──────────────────────────
+!api/
+!api/chat.js
+!package.json
+!vercel.json
+
 # ── Never commit data files ────────────────────────────────
 *.xlsx
 *.xlsm
@@ -19,3 +25,7 @@
 *.pdf
 *.zip
 *.json
+
+# ── Re-include specific json files after *.json exclusion ──
+!package.json
+!vercel.json
