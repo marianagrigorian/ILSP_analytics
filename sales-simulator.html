@@ -123,8 +123,7 @@ html,body{height:100%;font-family:'Futura','Century Gothic','Avenir',system-ui,s
 .hub-title-block h2{font-size:28px;font-weight:800;color:var(--blue);letter-spacing:-.01em;margin-bottom:6px}
 .hub-title-block h2 span{color:var(--pink)}
 .hub-title-block p{font-size:13px;color:#667;line-height:1.65;max-width:560px}
-.hub-boxes{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:40px}
-@media(max-width:600px){.hub-boxes{grid-template-columns:1fr}}
+.hub-boxes{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-bottom:40px}
 .hub-box{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);transition:transform .15s,box-shadow .15s;text-decoration:none;color:inherit;display:flex;flex-direction:column;border:2px solid transparent;cursor:pointer}
 .hub-box:hover:not(.disabled){transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.14);border-color:var(--lb)}
 .hub-box.disabled{cursor:default;opacity:.6}
@@ -549,6 +548,19 @@ function renderHub() {
         </div>
         <div class="hub-box-foot">
           <span class="hub-box-tag" style="background:#fde8f3;color:#c4006b">4 Segments · v5.5</span>
+          <span class="hub-box-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="call-checklist.html" class="hub-box" style="text-decoration:none">
+        <div class="hub-box-stripe" style="background:var(--green)"></div>
+        <div class="hub-box-body">
+          <div class="hub-box-icon">✅</div>
+          <div class="hub-box-title">Call Checklist</div>
+          <div class="hub-box-desc">Interactive checklist for every inbound call — from opening to close. Covers discovery, destination, duration, price, departure, objection handling and next steps. Reset between calls.</div>
+        </div>
+        <div class="hub-box-foot">
+          <span class="hub-box-tag" style="background:#e2f4ed;color:#0d7a55">62 checkpoints</span>
           <span class="hub-box-arrow">→</span>
         </div>
       </a>

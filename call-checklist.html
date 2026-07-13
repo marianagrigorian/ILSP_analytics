@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Call Checklist — EF Adults</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Futura','Century Gothic','Avenir',system-ui,sans-serif;background:#f0f3f7;color:#191919}
+:root{--blue:#003C64;--lb:#009EEB;--pink:#FF329B;--green:#1D9E75;--orange:#C87000;--red:#CC0066}
+
+/* ── TOP BAR ── */
+.top-bar{background:var(--blue);color:#fff;padding:0 28px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.accent-bar{width:4px;height:30px;background:var(--pink);border-radius:2px;flex-shrink:0}
+.top-bar h1{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.spacer{flex:1}
+.back-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;cursor:pointer;transition:background .15s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+.back-btn:hover{background:rgba(255,255,255,.22)}
+.reset-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;cursor:pointer;transition:background .15s}
+.reset-btn:hover{background:rgba(255,255,255,.22)}
+.print-btn{background:var(--pink);color:#fff;font-family:inherit;font-size:12px;font-weight:800;padding:7px 16px;border-radius:6px;border:none;cursor:pointer;transition:background .15s}
+.print-btn:hover{background:#e0007f}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#003C64 55%,#005080);color:#fff;padding:28px 32px 24px}
+.hero h2{font-size:24px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+.hero h2 span{color:var(--pink)}
+.hero p{font-size:12.5px;opacity:.7;line-height:1.6;max-width:580px}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{background:#fff;border-bottom:1px solid #e0e4ea;padding:12px 32px;display:flex;align-items:center;gap:16px;position:sticky;top:56px;z-index:100}
+.prog-label{font-size:11px;font-weight:800;color:var(--blue);white-space:nowrap}
+.prog-track{flex:1;height:6px;background:#e8ecf0;border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--green);border-radius:3px;transition:width .3s ease}
+.prog-count{font-size:11px;font-weight:800;color:var(--green);white-space:nowrap;min-width:50px;text-align:right}
+.prog-pct{font-size:11px;color:#aab;white-space:nowrap}
+
+/* ── MAIN ── */
+.main{max-width:860px;margin:0 auto;padding:24px 32px 64px}
+
+/* ── PHASE BLOCK ── */
+.phase{margin-bottom:20px;border-radius:12px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.phase-header{display:flex;align-items:center;gap:10px;padding:14px 20px;cursor:pointer;user-select:none}
+.phase-header h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;flex:1}
+.phase-icon{font-size:16px;flex-shrink:0}
+.phase-count{font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.25);color:#fff;white-space:nowrap}
+.phase-chevron{font-size:11px;color:rgba(255,255,255,.6);transition:transform .2s}
+.phase-header.open .phase-chevron{transform:rotate(180deg)}
+.phase-body{background:#fff;display:none}
+.phase-body.open{display:block}
+
+/* ── SECTION within phase ── */
+.section-label{font-size:9px;font-weight:800;color:#aab;text-transform:uppercase;letter-spacing:.1em;padding:14px 20px 6px;border-top:1px solid #f0f3f7}
+.section-label:first-child{border-top:none;padding-top:14px}
+
+/* ── CHECKLIST ITEM ── */
+.item{display:flex;gap:12px;align-items:flex-start;padding:9px 20px;border-bottom:1px solid #f4f6f9;cursor:pointer;transition:background .1s;-webkit-tap-highlight-color:transparent}
+.item:last-child{border-bottom:none}
+.item:hover{background:#fafbfc}
+.item.checked{background:#f3fbf7}
+.item.checked .item-text{color:#aab;text-decoration:line-through;text-decoration-color:#ccd}
+
+.check-box{width:18px;height:18px;border:2px solid #d0d8e0;border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.item.checked .check-box{background:var(--green);border-color:var(--green)}
+.check-tick{display:none;color:#fff;font-size:11px;font-weight:900}
+.item.checked .check-tick{display:block}
+
+.item-text{font-size:12.5px;line-height:1.55;color:#334;flex:1}
+.item-text strong{color:var(--blue);font-weight:800}
+.item-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:8px;white-space:nowrap;flex-shrink:0;margin-top:2px;align-self:flex-start}
+.tag-never{background:#fff0f5;color:var(--red)}
+.tag-tip{background:#fff8e8;color:var(--orange)}
+.tag-key{background:#e8f5f3;color:var(--green)}
+.tag-seg{background:#f0f4ff;color:var(--blue)}
+
+/* ── DIVIDER ── */
+.seg-divider{padding:10px 20px 8px;background:#f7f9fb;border-top:1px solid #eef1f4;border-bottom:1px solid #eef1f4}
+.seg-divider-label{font-size:10px;font-weight:800;color:#667;text-transform:uppercase;letter-spacing:.07em}
+
+/* ── PRINT ── */
+@media print {
+  .top-bar,.progress-bar,.print-btn,.reset-btn,.back-btn{display:none!important}
+  .phase-body{display:block!important}
+  .phase-header{page-break-inside:avoid}
+  body{background:#fff;font-size:11px}
+  .main{padding:0;max-width:100%}
+  .hero{color:#000;background:#fff;padding:12px 0;border-bottom:2px solid #000}
+  .hero h2{color:#000}
+  .item{padding:5px 8px;border-bottom:1px solid #eee}
+  .item-text{font-size:11px}
+  .check-box{border:1.5px solid #999}
+  .phase{box-shadow:none;border:1px solid #ddd;margin-bottom:12px}
+  .phase-header{background:#f0f0f0!important}
+  .phase-header h2{color:#000!important}
+  .phase-chevron,.phase-count{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="accent-bar"></div>
+  <a href="sales-simulator.html" class="back-btn">← Back</a>
+  <h1>EF Analytics</h1>
+  <div class="spacer"></div>
+  <button class="reset-btn" onclick="resetAll()">↺ New Call</button>
+  <button class="print-btn" onclick="window.print()">🖨 Print</button>
+</div>
+
+<div class="hero">
+  <h2>Sales Call <span>Checklist</span></h2>
+  <p>Inbound lead → booking. Tick each item as you go. Click "New Call" to reset for the next call.</p>
+</div>
+
+<div class="progress-bar">
+  <span class="prog-label">Progress</span>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  <span class="prog-count" id="prog-count">0 / 0</span>
+  <span class="prog-pct" id="prog-pct">0%</span>
+</div>
+
+<div class="main" id="main">
+
+  <!-- ═══ BEFORE THE CALL ═══ -->
+  <div class="phase" id="phase-before">
+    <div class="phase-header open" style="background:#445566" onclick="togglePhase(this)">
+      <span class="phase-icon">📋</span>
+      <h2 style="color:#fff">Before the Call</h2>
+      <span class="phase-count" id="count-before">0/3</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Check any lead info available (source, form data, previous interactions) — know their name and what channel they came from before you pick up</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Have cohort dates and destination availability open on your screen — specific dates close deals; "we have lots of options" does not</div><span class="item-tag tag-tip">TIP</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Have the script open on segment-specific KSPs — know in advance which proof points you'll reach for by segment</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ OPENING ═══ -->
+  <div class="phase" id="phase-open">
+    <div class="phase-header open" style="background:var(--blue)" onclick="togglePhase(this)">
+      <span class="phase-icon">👋</span>
+      <h2 style="color:#fff">Opening — First 5 Minutes</h2>
+      <span class="phase-count" id="count-open">0/5</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Warm, confident opener — skip "how are you today?" and get to value fast</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Trigger question asked:</strong> "What's prompting you to look at this now?" — this is the most valuable minute of the call. Never skip it.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Let them speak for the first 2+ minutes without interruption — inbound leads have been thinking about this for weeks. They need to say it out loud before they'll hear you.</div><span class="item-tag tag-tip">TIP</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Segment identified</strong> from the trigger answer: Graduate / Professional / Resetter / Explorer</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Emotional driver noted — what is the specific thing they want to unlock, escape, or become?</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ DISCOVERY ═══ -->
+  <div class="phase" id="phase-disc">
+    <div class="phase-header open" style="background:#0055A0" onclick="togglePhase(this)">
+      <span class="phase-icon">🔍</span>
+      <h2 style="color:#fff">Discovery</h2>
+      <span class="phase-count" id="count-disc">0/7</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Specific outcome identified</strong> — not "learn Spanish" but "run the Geneva meeting in French" or "feel connected to my granddaughter". The outcome is what you anchor the whole pitch on.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Previous attempts at language learning noted (apps, tutors, evening classes) — gives you the immersion contrast argument</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Timeline understood — do they have a specific window? (graduation date, job starting, sabbatical booked, empty calendar)</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Co-decision-maker identified</strong> — partner, parent, employer, HR. If someone else is in the room, you need a relationship with them too.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Budget range sensed — self-funded / parent co-fund / employer sponsored / open</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Language confirmed — which language, what level do they think they're at, what do they want to reach?</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Recap their words back</strong> before pitching: "So if I understood correctly, you [their words]... is that right?" — they say yes, and now they're committed to the problem before you've said anything about the solution.</div><span class="item-tag tag-tip">TIP</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ THE PITCH ═══ -->
+  <div class="phase" id="phase-pitch">
+    <div class="phase-header open" style="background:#006B62" onclick="togglePhase(this)">
+      <span class="phase-icon">⭐</span>
+      <h2 style="color:#fff">The Pitch</h2>
+      <span class="phase-count" id="count-pitch">0/11</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="section-label">Universal</div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Anchored on <strong>their specific outcome</strong>, not product features — "six weeks in London" is a feature, "walking into that meeting and running it in French" is an outcome</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Speed proof point used: immersion produces progress up to 11× faster than classroom or app-based study</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">EF Learning Guarantee referenced: one full level every 6 weeks with full attendance — or study for free</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>6 weeks positioned as the standard</strong> from the start — not 2, not 4. If they object to duration, handle it then.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">A-Z logistics mentioned: visa guidance, airport transfers, accommodation, 24/7 on-site support — EF handles everything</div></div>
+
+      <div class="section-label">Never Say</div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Did NOT say "adult-only" → said "like-minded people at a similar life stage" or "students grouped by level, not age"</div><span class="item-tag tag-never">NEVER</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Did NOT say "internationally recognized" for CASC → said "a certificate you put on your CV showing verified language skills in a specific field"</div><span class="item-tag tag-never">NEVER</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Did NOT say "holiday", "escape", "getaway", "treat yourself" (Resetter/Explorer) → said "a chapter", "a decision", "a lifestyle"</div><span class="item-tag tag-never">NEVER</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Did NOT say "senior", "elderly", "for your age", "still sharp" (Explorer) → spoke to their appetite, not their age</div><span class="item-tag tag-never">NEVER</span></div>
+
+      <div class="section-label">Segment-Specific KSP Used</div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Graduate:</strong> CASC certificate explained as "a credential you put on your CV showing verified language skills in a specific field" + career city signal + Study &amp; Work programme (JCG / JCI / INT)</div><span class="item-tag tag-seg">GRAD</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Professional:</strong> EF Pro Track + 1:1 progress reviews tied to professional goal + bilingual salary premium 10–20% + career city match</div><span class="item-tag tag-seg">PROF</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Resetter:</strong> Community of like-minded adults at the same life stage + Culture Unlocked destination (Rome / Málaga / Barcelona / Cape Town) + single room + "not a holiday, a chapter"</div><span class="item-tag tag-seg">RESET</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Explorer:</strong> A tribe, not just a trip — community that outlasts the programme + neuroscience proof point (bilingual adults show cognitive decline up to 5 years later) + A-Z logistics handled</div><span class="item-tag tag-seg">EXPLOR</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ PRACTICALITIES — DESTINATION ═══ -->
+  <div class="phase" id="phase-dest">
+    <div class="phase-header open" style="background:#7B3F9E" onclick="togglePhase(this)">
+      <span class="phase-icon">🌍</span>
+      <h2 style="color:#fff">Practicalities — Destination</h2>
+      <span class="phase-count" id="count-dest">0/6</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Destination matched to their specific outcome</strong> — not "Barcelona is beautiful" but "Barcelona is where you go when the outcome is X, and here's exactly why"</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Named 2–3 specific destination options with a reason for each — vague "we have lots of options" kills urgency</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Graduate:</strong> LON / NYC / DUB / BAR — career cities where the destination is part of the CV signal to employers</div><span class="item-tag tag-seg">GRAD</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Professional:</strong> DUB / MAN / LON / NYC / SYD / SIN / CAP — language-for-work cities, environment reinforces the goal every day</div><span class="item-tag tag-seg">PROF</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Resetter:</strong> ROM / MAA / BAR / Nice-Paris / Cape Town / Dublin — Culture Unlocked, environments that sustain the transformation</div><span class="item-tag tag-seg">RESET</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Explorer:</strong> MSJ / MAN / CAP / MAA / ROM — high concentration of adult learners, community already there, rich local culture</div><span class="item-tag tag-seg">EXPLOR</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ PRACTICALITIES — DURATION ═══ -->
+  <div class="phase" id="phase-dur">
+    <div class="phase-header open" style="background:#004080" onclick="togglePhase(this)">
+      <span class="phase-icon">📅</span>
+      <h2 style="color:#fff">Practicalities — Duration</h2>
+      <span class="phase-count" id="count-dur">0/4</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>6 weeks presented first, always</strong> — it is the standard, not the premium option. Never open with shorter.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Duration connected to outcome: "6 weeks is where the real change happens — it's not arbitrary"</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">If duration objection raised: offered 3 × 2-week blocks as the workaround — "same total progress, never away for long, something concrete to show each time"</div><span class="item-tag tag-tip">TIP</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Did NOT proactively suggest 2 or 4 weeks without a constraint being named first</div><span class="item-tag tag-never">NEVER</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ PRACTICALITIES — PRICE ═══ -->
+  <div class="phase" id="phase-price">
+    <div class="phase-header open" style="background:var(--orange)" onclick="togglePhase(this)">
+      <span class="phase-icon">💰</span>
+      <h2 style="color:#fff">Practicalities — Price</h2>
+      <span class="phase-count" id="count-price">0/6</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Price not mentioned before value is established</strong> — anchoring the conversation in cost before the outcome is clear kills the sale</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Price framed as ROI, not cost: <strong>"The question isn't what this costs — it's what it costs you to not do it."</strong> Say it once, clearly, then let it sit.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">If they asked price before value was established: gave a range + immediately linked to outcome ("it starts from X, and the question is what the result is worth to you")</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Segment-specific ROI anchor used if applicable — bilingual premium 10–20% (Professional); "cheaper than a postgrad" (Graduate); "what does the next chapter cost if you keep not doing it?" (Resetter/Explorer)</div><span class="item-tag tag-tip">TIP</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Employer / L&amp;D funding angle raised where relevant (Professional) — many companies will cover it and the customer may not know to ask</div><span class="item-tag tag-seg">PROF</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Did NOT offer a discount without getting something in return — if a concession was made, asked for a commitment (decision today, longer stay, referral) in exchange</div><span class="item-tag tag-never">NEVER</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ PRACTICALITIES — DEPARTURE DATE ═══ -->
+  <div class="phase" id="phase-dep">
+    <div class="phase-header open" style="background:#CC5500" onclick="togglePhase(this)">
+      <span class="phase-icon">✈️</span>
+      <h2 style="color:#fff">Practicalities — Departure Date</h2>
+      <span class="phase-count" id="count-dep">0/4</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Named specific departure months or cohort dates</strong> — "we have lots of options" is not urgency. "The March cohort in Dublin has availability now" is.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Their timeline confirmed — what date constraints do they have? (job start, partner's schedule, work leave approval, school year)</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Real scarcity used if true — "that cohort only has a few spots and I don't want to call you next week and tell you it's full." Never fake it.</div><span class="item-tag tag-tip">TIP</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Departure date pinned to a specific month by end of call — even a soft commitment ("you're thinking March or April") is far better than leaving it open</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ PRACTICALITIES — ACCOMMODATION ═══ -->
+  <div class="phase" id="phase-acc">
+    <div class="phase-header open" style="background:#445544" onclick="togglePhase(this)">
+      <span class="phase-icon">🛏</span>
+      <h2 style="color:#fff">Practicalities — Accommodation</h2>
+      <span class="phase-count" id="count-acc">0/4</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Accommodation preference asked — single room in residence vs. homestay family</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Single room confirmed as available and standard — for Resetter and Explorer this is non-negotiable; confirm it proactively before they ask</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Homestay framed as an immersion bonus, not a budget option — "meals, conversation, and local life around the clock"</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">A-Z logistics confirmed: visa guidance, airport transfers, meal plans, 24/7 on-site support — nothing left for them to navigate alone</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ OBJECTION HANDLING ═══ -->
+  <div class="phase" id="phase-obj">
+    <div class="phase-header open" style="background:var(--red)" onclick="togglePhase(this)">
+      <span class="phase-icon">⚡</span>
+      <h2 style="color:#fff">Objection Handling</h2>
+      <span class="phase-count" id="count-obj">0/8</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Held through at least 3 objections before adjusting course.</strong> First = automatic. Second = reflex. Third = real. Most people give up at one.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Isolated before responding:</strong> "Is that the only thing stopping you, or is there something else?" — handle the real blocker, not the stated one</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Labeled the emotion before responding: "It sounds like you've been wanting to do this for a long time but something keeps getting in the way" — named emotions defuse, unnamed emotions become objections</div><span class="item-tag tag-tip">TIP</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Used the boomerang where relevant — turned the objection into the reason: "That's exactly why now is the right time, not despite that"</div><span class="item-tag tag-tip">TIP</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Used Feel / Felt / Found once if appropriate: "I understand how you feel — others have felt the same. What they found was..."</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Mirrored when stuck — repeated the last 3 words of their sentence as a question, then waited in silence</div><span class="item-tag tag-tip">TIP</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Named the obvious fear proactively before they did — surfacing it first defuses it and builds enormous trust</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Did NOT respond to an objection with another question — answered it cleanly, then asked to check it landed</div><span class="item-tag tag-never">NEVER</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ CLOSING ═══ -->
+  <div class="phase" id="phase-close">
+    <div class="phase-header open" style="background:var(--green)" onclick="togglePhase(this)">
+      <span class="phase-icon">🎯</span>
+      <h2 style="color:#fff">Closing</h2>
+      <span class="phase-count" id="count-close">0/7</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Pre-close check run:</strong> "Is there any reason why, if we could sort out X, you wouldn't want to move forward today?" — surfaces hidden blockers before you've committed to your close</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Vivid first-week picture painted</strong> — "you arrive Sunday, you're met, Monday morning you're in class, by Thursday you're at dinner with people from 12 countries speaking the language." This closes more than any feature.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Assumptive close used</strong> — not "would you like to go ahead?" but "which works better for you — March or May?" You're not asking if they want to buy; you're asking them to choose between two versions of yes.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Went silent after the closing question</strong> — the first person to speak after a close loses. Asked the question, then stopped completely.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Closed with specifics — named the destination, the cohort month, the room type, and the start date. Vague closes don't book anything.</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Real reason to decide now given — a specific cohort date, availability, a deadline. Never fake it; one true reason beats five manufactured ones.</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Introduced the takeaway if stalled: "I want to make sure this is genuinely the right fit for you — it's not for everyone." Paradoxically increases desire and repositions you as an advisor.</div><span class="item-tag tag-tip">TIP</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ BEFORE YOU HANG UP ═══ -->
+  <div class="phase" id="phase-hangup">
+    <div class="phase-header open" style="background:#003C64" onclick="togglePhase(this)">
+      <span class="phase-icon">📞</span>
+      <h2 style="color:#fff">Before You Hang Up</h2>
+      <span class="phase-count" id="count-hangup">0/5</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Co-decision-maker plan made</strong> — armed them with the specific language to persuade their partner, parent, or manager. If someone else will veto this and you have no relationship with them, you've lost.</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Follow-up call booked BEFORE sending anything</strong> — "I'll send you the details and we'll go through them together on Thursday at 10" not "I'll send it and you can have a think"</div><span class="item-tag tag-key">KEY</span></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Specific date, time and agenda confirmed for follow-up — the moment the ball is in their court you've lost control of the sale</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Loyal community / return mechanic mentioned at close — "many people come back for their second level, or bring someone next time" — plants the seed of a longer relationship</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Ball stays in your court — the next action is yours, not theirs. "I will [send / call / confirm] by [specific day]"</div><span class="item-tag tag-key">KEY</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ AFTER THE CALL ═══ -->
+  <div class="phase" id="phase-after">
+    <div class="phase-header open" style="background:#334" onclick="togglePhase(this)">
+      <span class="phase-icon">📝</span>
+      <h2 style="color:#fff">After the Call</h2>
+      <span class="phase-count" id="count-after">0/3</span>
+      <span class="phase-chevron">▼</span>
+    </div>
+    <div class="phase-body open">
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">CRM updated immediately — segment, outcome, trigger, objections raised, decision stage, follow-up date</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text">Materials sent within 2 hours if promised — matched to their specific situation, not a generic brochure</div></div>
+      <div class="item" onclick="toggle(this)"><div class="check-box"><span class="check-tick">✓</span></div><div class="item-text"><strong>Lost call debriefed:</strong> where exactly did control slip? Most lost sales have one specific moment. Find it and fix that one thing before the next call.</div><span class="item-tag tag-tip">TIP</span></div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── ALL ITEMS ──
+const phases = [
+  { id: 'before', label: 'count-before' },
+  { id: 'open',   label: 'count-open'   },
+  { id: 'disc',   label: 'count-disc'   },
+  { id: 'pitch',  label: 'count-pitch'  },
+  { id: 'dest',   label: 'count-dest'   },
+  { id: 'dur',    label: 'count-dur'    },
+  { id: 'price',  label: 'count-price'  },
+  { id: 'dep',    label: 'count-dep'    },
+  { id: 'acc',    label: 'count-acc'    },
+  { id: 'obj',    label: 'count-obj'    },
+  { id: 'close',  label: 'count-close'  },
+  { id: 'hangup', label: 'count-hangup' },
+  { id: 'after',  label: 'count-after'  },
+];
+
+function toggle(el) {
+  el.classList.toggle('checked');
+  updateProgress();
+}
+
+function togglePhase(hd) {
+  const body = hd.nextElementSibling;
+  hd.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+function updateProgress() {
+  const allItems = document.querySelectorAll('.item');
+  const checkedItems = document.querySelectorAll('.item.checked');
+  const total = allItems.length;
+  const done = checkedItems.length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-count').textContent = done + ' / ' + total;
+  document.getElementById('prog-pct').textContent = pct + '%';
+
+  // Per-phase counts
+  phases.forEach(p => {
+    const phase = document.getElementById('phase-' + p.id);
+    if (!phase) return;
+    const pItems = phase.querySelectorAll('.item');
+    const pDone = phase.querySelectorAll('.item.checked');
+    const el = document.getElementById(p.label);
+    if (el) el.textContent = pDone.length + '/' + pItems.length;
+  });
+}
+
+function resetAll() {
+  if (!confirm('Start a new call? This will clear all checkboxes.')) return;
+  document.querySelectorAll('.item.checked').forEach(el => el.classList.remove('checked'));
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init
+updateProgress();
+</script>
+</body>
+</html>
