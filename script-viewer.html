@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segmented Sales Scripts v5.5 — EF Adults</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Futura','Century Gothic','Avenir',system-ui,sans-serif;background:#f0f3f7;color:#191919}
+:root{--blue:#003C64;--lb:#009EEB;--pink:#FF329B;--grad:#0072CE;--prof:#0055A0;--reset:#CC0066;--explor:#006B62}
+
+/* ── TOP BAR ── */
+.top-bar{background:var(--blue);color:#fff;padding:0 28px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.accent-bar{width:4px;height:30px;background:var(--pink);border-radius:2px;flex-shrink:0}
+.top-bar h1{font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.spacer{flex:1}
+.back-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;cursor:pointer;transition:background .15s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center}
+.back-btn:hover{background:rgba(255,255,255,.22)}
+.dl-btn{background:var(--pink);color:#fff;font-family:inherit;font-size:12px;font-weight:800;padding:7px 16px;border-radius:6px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap;transition:background .15s}
+.dl-btn:hover{background:#e0007f}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#003C64 55%,#005080);color:#fff;padding:32px 32px 26px}
+.hero h2{font-size:26px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.hero h2 span{color:var(--pink)}
+.hero p{font-size:13px;opacity:.7;line-height:1.6;max-width:600px}
+
+/* ── CONTROLS ── */
+.controls{background:#fff;border-bottom:2px solid #e8ecf0;padding:14px 32px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:56px;z-index:100}
+.filter-label{font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.filter-btn{font-family:inherit;font-size:11px;font-weight:800;padding:6px 14px;border-radius:20px;border:2px solid #dde2e8;background:#fff;color:#667;cursor:pointer;transition:all .15s;white-space:nowrap}
+.filter-btn:hover{border-color:#999;color:#333}
+.filter-btn.active-all{background:var(--blue);border-color:var(--blue);color:#fff}
+.filter-btn.active-graduate{background:var(--grad);border-color:var(--grad);color:#fff}
+.filter-btn.active-professional{background:var(--prof);border-color:var(--prof);color:#fff}
+.filter-btn.active-resetter{background:var(--reset);border-color:var(--reset);color:#fff}
+.filter-btn.active-explorer{background:var(--explor);border-color:var(--explor);color:#fff}
+.ctrl-sep{width:1px;height:22px;background:#dde2e8;flex-shrink:0}
+
+/* ── MAIN ── */
+.main{max-width:1000px;margin:0 auto;padding:28px 32px 64px}
+
+/* ── SECTION GROUP (segment wrapper) ── */
+.seg-group{margin-bottom:32px}
+.seg-group[data-seg]{display:none}
+.seg-group.visible{display:block}
+
+/* ── SEGMENT HEADER ── */
+.seg-header{border-radius:12px 12px 0 0;padding:22px 26px 18px;color:#fff;margin-bottom:1px}
+.seg-num{font-size:11px;font-weight:800;opacity:.55;letter-spacing:.1em;margin-bottom:2px}
+.seg-title{font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:3px}
+.seg-tagline{font-size:13px;opacity:.8;font-style:italic}
+
+/* ── COLLAPSIBLE SECTION ── */
+.section{background:#fff;margin-bottom:2px;overflow:hidden}
+.section:last-child{border-radius:0 0 12px 12px}
+.section-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;cursor:pointer;user-select:none;gap:12px;border-bottom:1px solid transparent;transition:background .12s}
+.section-hd:hover{background:#fafbfc}
+.section-hd.open{border-bottom-color:#eef1f4}
+.section-hd h3{font-size:13px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:8px}
+.section-hd h3 .ico{font-size:15px}
+.chevron{font-size:11px;color:#bbb;transition:transform .2s;flex-shrink:0}
+.section-hd.open .chevron{transform:rotate(180deg)}
+.section-body{padding:0 22px 20px;display:none}
+.section-body.open{display:block}
+
+/* ── GENERIC SECTION (no collapse, always open) ── */
+.generic-section{background:#fff;border-radius:12px;padding:22px 26px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.generic-section h3{font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #eef1f4}
+
+/* ── PRINCIPLE LIST ── */
+.principles{display:flex;flex-direction:column;gap:10px}
+.principle{display:flex;gap:12px;align-items:flex-start}
+.principle-num{background:var(--pink);color:#fff;width:22px;height:22px;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.principle-text{font-size:13px;line-height:1.6;color:#334}
+
+/* ── TABLES ── */
+.data-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+.data-table th{background:#f4f7fb;color:var(--blue);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;padding:9px 12px;text-align:left;border-bottom:2px solid #e0e6ef}
+.data-table td{padding:10px 12px;border-bottom:1px solid #eef1f4;vertical-align:top;line-height:1.55;color:#334}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:nth-child(even) td{background:#fafbfd}
+.data-table td:first-child{font-weight:700;color:#445;white-space:nowrap;width:25%}
+.data-table td.fear{color:var(--reset);font-weight:700}
+.data-table td.obj{color:var(--blue);font-weight:700}
+
+/* ── DONT/DO TABLE ── */
+.dont-do{width:100%;border-collapse:collapse;font-size:12.5px}
+.dont-do th{padding:9px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid #eef1f4;text-align:left}
+.dont-do th:first-child{color:var(--reset);background:#fff5f8}
+.dont-do th:last-child{color:#1D9E75;background:#f3fbf7}
+.dont-do td{padding:10px 14px;border-bottom:1px solid #eef1f4;vertical-align:top;line-height:1.55;font-size:12.5px}
+.dont-do td:first-child{background:#fff5f8;color:var(--reset);font-weight:700;width:42%}
+.dont-do td:last-child{background:#f3fbf7;color:#1a6644}
+.dont-do tr:last-child td{border-bottom:none}
+
+/* ── CONVICTION LINES ── */
+.conviction-lines{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.conviction-line{background:#f4f8fb;border-left:3px solid var(--lb);padding:10px 16px;border-radius:0 8px 8px 0;font-size:13.5px;font-style:italic;color:#223;line-height:1.5;font-weight:600}
+
+/* ── NEVER SAY ── */
+.never-say-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.never-say-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.55;color:#334}
+.never-say-item::before{content:'🚫';font-size:13px;flex-shrink:0;margin-top:1px}
+
+/* ── TONE BOX ── */
+.tone-box{background:linear-gradient(135deg,#f8f4ff,#f0f6ff);border:1.5px solid #dce7f5;border-radius:10px;padding:16px 18px;margin-top:4px}
+.tone-box p{font-size:13px;line-height:1.7;color:#334}
+.tone-box strong{color:var(--blue)}
+
+/* ── PERSONA CARD ── */
+.persona-card{display:flex;gap:16px;align-items:flex-start;margin-top:4px}
+.persona-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:#fff;flex-shrink:0}
+.persona-info{flex:1}
+.persona-name{font-size:15px;font-weight:800;color:#191919;margin-bottom:2px}
+.persona-meta{font-size:11px;color:#778;margin-bottom:8px}
+.persona-quote{font-size:12.5px;color:#445;line-height:1.6;font-style:italic;padding:8px 12px;background:#f7f9fb;border-radius:6px;border-left:3px solid #ccd}
+.persona-fears{margin-top:8px}
+.persona-fears .label{font-size:10px;font-weight:800;color:#999;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.fear-chips{display:flex;flex-wrap:wrap;gap:5px}
+.fear-chip{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:700}
+
+/* ── KSP LIST ── */
+.ksp-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.ksp-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.6;color:#334}
+.ksp-item::before{content:'▸';color:var(--lb);font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ── FEATURE BOX ── */
+.feature-box{background:#f4f8fb;border-radius:10px;padding:16px 18px;margin-top:4px}
+.feature-box h4{font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
+.feature-list{display:flex;flex-direction:column;gap:7px}
+.feature-item{font-size:12.5px;color:#334;line-height:1.55;padding:7px 12px;background:#fff;border-radius:6px;border-left:3px solid var(--lb)}
+.feature-item strong{color:var(--blue);display:block;margin-bottom:1px}
+
+/* ── LOYAL COMMUNITY ── */
+.loyal-box{background:#f0f8f4;border:1.5px solid #b4e4cf;border-radius:10px;padding:16px 18px;margin-top:4px}
+.loyal-box .loyal-title{font-size:11px;font-weight:800;color:#0d7a55;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.loyal-items{display:flex;flex-direction:column;gap:8px}
+.loyal-item{font-size:12.5px;line-height:1.6;color:#1a5c40;padding:7px 12px;background:#fff;border-radius:6px;border-left:3px solid #1D9E75}
+.loyal-item strong{color:#0d7a55;display:block;margin-bottom:1px}
+
+/* ── CLOSING QUOTE ── */
+.closing-quote{background:var(--blue);color:#fff;border-radius:10px;padding:18px 20px;margin-top:4px;font-size:13px;line-height:1.7;font-style:italic;position:relative}
+.closing-quote::before{content:'"';font-size:44px;color:var(--pink);position:absolute;top:4px;left:14px;line-height:1;font-style:normal}
+.closing-quote p{padding-left:28px}
+
+/* ── SEGMENT ID GRID ── */
+.seg-id-grid{overflow-x:auto;margin-top:4px}
+.seg-id-table{width:100%;border-collapse:collapse;font-size:12px;min-width:620px}
+.seg-id-table th{padding:9px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;text-align:left;border-bottom:2px solid #e0e6ef;color:#fff;white-space:nowrap}
+.seg-id-table th:nth-child(1){background:#555;color:#fff}
+.seg-id-table th:nth-child(2){background:var(--grad)}
+.seg-id-table th:nth-child(3){background:var(--prof)}
+.seg-id-table th:nth-child(4){background:var(--reset)}
+.seg-id-table th:nth-child(5){background:var(--explor)}
+.seg-id-table td{padding:9px 12px;border-bottom:1px solid #eef1f4;vertical-align:top;line-height:1.5;color:#334}
+.seg-id-table td:first-child{font-weight:700;color:#667;font-size:10px;text-transform:uppercase;letter-spacing:.06em;background:#f7f9fb}
+.seg-id-table tr:last-child td{border-bottom:none}
+.seg-id-table tr:nth-child(even) td{background:#fafbfd}
+.seg-id-table tr:nth-child(even) td:first-child{background:#f0f2f5}
+
+/* ── STUDY & WORK ── */
+.sw-grid{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.sw-card{background:#eaf3ff;border-radius:8px;padding:12px 16px;border-left:3px solid var(--grad)}
+.sw-card-title{font-size:12px;font-weight:800;color:var(--grad);margin-bottom:4px}
+.sw-card-desc{font-size:12.5px;color:#334;line-height:1.55}
+
+/* ── PRO TRACK ── */
+.pro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+@media(max-width:600px){.pro-grid{grid-template-columns:1fr}}
+.pro-card{background:#eaf0ff;border-radius:8px;padding:12px 16px;border-left:3px solid var(--prof)}
+.pro-card-title{font-size:11px;font-weight:800;color:var(--prof);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.pro-card-content{font-size:12px;color:#334;line-height:1.55}
+
+/* ── OPENING APPROACH ── */
+.opening-box{background:#f7f9fb;border-radius:10px;padding:16px 18px;margin-top:4px;border-left:4px solid var(--lb)}
+.opening-question{font-size:14px;font-weight:800;color:var(--blue);margin-bottom:8px}
+.opening-followup{font-size:13px;color:#445;line-height:1.65}
+.opening-pivot{font-size:13px;font-style:italic;color:#556;margin-top:8px;padding:10px 14px;background:#fff;border-radius:6px}
+
+/* ── SECTION LABEL (for subsections) ── */
+.subsection-label{font-size:10px;font-weight:800;color:#aab;text-transform:uppercase;letter-spacing:.08em;margin:14px 0 6px}
+
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="accent-bar"></div>
+  <a href="sales-simulator.html" class="back-btn">← Back</a>
+  <h1>EF Analytics</h1>
+  <div class="spacer"></div>
+  <span style="font-size:11px;opacity:.45;margin-right:4px">v5.5</span>
+  <a href="EF_Adults_Sales_Scripts_v5.5.docx" download class="dl-btn">⬇ Download Script</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h2>Segmented Sales <span>Scripts</span></h2>
+  <p>EF Adults v5.5 — four buyer segments with full objection handling, conviction lines, fears, never-say rules, and closing techniques.</p>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <span class="filter-label">Show:</span>
+  <button class="filter-btn active-all" onclick="setFilter('all')">All Segments</button>
+  <button class="filter-btn" onclick="setFilter('graduate')">01 Graduate</button>
+  <button class="filter-btn" onclick="setFilter('professional')">02 Professional</button>
+  <button class="filter-btn" onclick="setFilter('resetter')">03 Resetter</button>
+  <button class="filter-btn" onclick="setFilter('explorer')">04 Explorer</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- ═══ GENERIC — ALWAYS VISIBLE ═══ -->
+
+  <div class="generic-section">
+    <h3>3 Principles — Apply to Every Call</h3>
+    <div class="principles">
+      <div class="principle">
+        <div class="principle-num">1</div>
+        <div class="principle-text">Start by identifying the segment — <strong>"What's prompting you to think about this now?"</strong></div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">2</div>
+        <div class="principle-text">Anchor your pitch on that segment's Key Selling Points</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">3</div>
+        <div class="principle-text">Compete on worth, never on discount. Price is not the conversation — value is.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="generic-section">
+    <h3>DO / DON'T Language — All Segments</h3>
+    <table class="dont-do">
+      <thead><tr><th>❌ Never Say</th><th>✓ Say Instead</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>"Adult-only" or "adults-only guaranteed"</td>
+          <td>"Like-minded people at a similar life stage" / "a balanced age mix with enough adults to connect with" / "students grouped by level, not age."</td>
+        </tr>
+        <tr>
+          <td>"Internationally recognized certification"</td>
+          <td>"A CASC certificate you can put on your CV, showing relevant language skills in a specific field"</td>
+        </tr>
+        <tr>
+          <td>"2 weeks"</td>
+          <td>The minimum meaningful stay is 6 weeks. (Default, unless the customer has a constraint)</td>
+        </tr>
+        <tr>
+          <td>"Senior" / "elderly" / "for your age" / "still sharp"</td>
+          <td>Address appetite, not age.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="generic-section">
+    <h3>Segment Identification Guide</h3>
+    <div class="seg-id-grid">
+      <table class="seg-id-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>GRADUATE</th>
+            <th>PROFESSIONAL</th>
+            <th>RESETTER</th>
+            <th>EXPLORER</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Age / Life stage</td>
+            <td>22–30. Just graduated or in gap year</td>
+            <td>31–44. Employed, career-focused, time-poor</td>
+            <td>30–55. At an inflection point — something just freed up or broke open</td>
+            <td>55+. Semi-retired or retired; active and curious</td>
+          </tr>
+          <tr>
+            <td>Trigger</td>
+            <td>Graduation, 1st rejection, watching peers go abroad, degree no longer the edge</td>
+            <td>Promotion plateau, redundancy, move, language = the block</td>
+            <td>Milestone, burnout, empty nest, end of a relationship, "if not now, when?"</td>
+            <td>Retirement, grandchild who speaks another language, friend who came back changed</td>
+          </tr>
+          <tr>
+            <td>They say</td>
+            <td>"I need something that sets me apart before my 1st job"</td>
+            <td>"[language] is the one thing standing between me and the next role"</td>
+            <td>"I've spent years on everyone else. I need to do something for me."</td>
+            <td>"I want to keep growing and meet people who feel the same"</td>
+          </tr>
+          <tr>
+            <td>Main fear</td>
+            <td>Wasting money / time; parents saying "get a real job"</td>
+            <td>Time away from work; low ROI; no real progress</td>
+            <td>Self-indulgence guilt; "am I too old?"; loneliness</td>
+            <td>Program too fast; being the odd one out; logistics solo</td>
+          </tr>
+          <tr>
+            <td>Opening question</td>
+            <td>"What's prompting you to think about this now — graduation, a job search?"</td>
+            <td>"What role or move is this unlocking for you?"</td>
+            <td>"What opened up that's making you think about this now?"</td>
+            <td>"What language have you always wanted and never quite done?"</td>
+          </tr>
+          <tr>
+            <td>Lead with</td>
+            <td>Career edge + CASC certificate + peer cohort</td>
+            <td>Results + speed + professional credentials</td>
+            <td>Experience + transformation + community of like-minded adults</td>
+            <td>Community + safety + "this is a lifestyle, not a trip"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 01 GRADUATE ═══ -->
+  <div class="seg-group visible" data-seg="graduate">
+    <div class="seg-header" style="background:var(--grad)">
+      <div class="seg-num">01</div>
+      <div class="seg-title">GRADUATE</div>
+      <div class="seg-tagline">Instrumental · career &amp; world unlocking · "The edge your degree didn't give you."</div>
+    </div>
+
+    <!-- TONE -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎙</span> Tone</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="tone-box">
+          <p><strong>Peer-level, energetic, competitive, forward-leaning.</strong> A little edge — not safe. Ambitious but NOT corporate. Sound like direct advice from someone two years ahead who is honest about the gap and clear about how to close it.</p>
+          <p style="margin-top:8px">Never: sound corporate or HR, lead with a discount, or promise a "holiday." <strong>Outcome first, always</strong> — "got the role," not "my English improved."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAMPLE PERSONA -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">👤</span> Example Persona</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="persona-card">
+          <div class="persona-avatar" style="background:var(--grad)">S</div>
+          <div class="persona-info">
+            <div class="persona-name">Sofia, 24</div>
+            <div class="persona-meta">Business degree · 8 months post-graduation · stalling job search</div>
+            <div class="persona-quote">"Three of my friends already have international roles. I've had rejections. I found EF on Instagram — I just don't know if it'll actually help me get a job or if it's an expensive gap year."</div>
+            <div class="persona-fears">
+              <div class="label">She'll raise</div>
+              <div class="fear-chips">
+                <span class="fear-chip" style="background:#EAF3FF;color:var(--grad)">Will this get me hired?</span>
+                <span class="fear-chip" style="background:#EAF3FF;color:var(--grad)">Parents say get a job now</span>
+                <span class="fear-chip" style="background:#EAF3FF;color:var(--grad)">Cost with no income</span>
+                <span class="fear-chip" style="background:#EAF3FF;color:var(--grad)">Class with teenagers?</span>
+                <span class="fear-chip" style="background:#EAF3FF;color:var(--grad)">What's CASC?</span>
+                <span class="fear-chip" style="background:#EAF3FF;color:var(--grad)">6 weeks too long</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPENING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💬</span> Opening Approach</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="opening-box">
+          <div class="opening-question">Ask: "What's prompting you to think about this now — graduation, a job search?"</div>
+          <div class="opening-followup">Listen for the gap: degree feels like enough but isn't opening doors. Then pivot:</div>
+          <div class="opening-pivot">"The first thing to know is: everyone in your cohort now has the same degree. The question is what makes you the obvious hire. That's exactly what six weeks at EF is designed to answer."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KSPs -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">⭐</span> Key Selling Points</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="ksp-list">
+          <div class="ksp-item">The <strong>CASC certificate</strong>: a credential you put on your CV showing verified language skills in a specific field. Not a participation award — formal evidence of level.</div>
+          <div class="ksp-item"><strong>Career-city immersion</strong> (LON, NYC, DUB, BAR) — the city is part of the signal to employers.</div>
+          <div class="ksp-item">Classes formed by level, not age — you're with people at the same crossroads and at your exact level. Teachers are expert communicative-method instructors who specialise in adult progress.</div>
+          <div class="ksp-item"><strong>Study &amp; Work programs</strong> — (JCG or JCI or INT) let you combine language study with real-world work exposure in-country.</div>
+          <div class="ksp-item"><strong>EF's Learning Guarantee</strong>: advance one full course level every 6 weeks with full attendance and completed assignments — or you continue studying for free until you do.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDY & WORK -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎓</span> Study &amp; Work Programmes</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="sw-grid">
+          <div class="sw-card">
+            <div class="sw-card-title">EF General Job Club (JCG)</div>
+            <div class="sw-card-desc">Language classes plus structured job-search support: CV workshops, cover letter clinics, interview prep, and career coaching — all in the target language.</div>
+          </div>
+          <div class="sw-card">
+            <div class="sw-card-title">EF Intensive Job Club (JCI)</div>
+            <div class="sw-card-desc">More language hours, same career toolkit — ideal if fluency is the priority and career momentum is tight.</div>
+          </div>
+          <div class="sw-card">
+            <div class="sw-card-title">EF Internship Experience (INT)</div>
+            <div class="sw-card-desc">Language courses combined with a real guaranteed internship placement post course — language skills applied in an actual workplace. <strong>The strongest CV story of the three.</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVICTION LINES -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💡</span> Conviction Lines</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="conviction-lines">
+          <div class="conviction-line">"Your degree got you to the start line. This is how you get ahead of it."</div>
+          <div class="conviction-line">"Six weeks. A certificate. A story. A network. That's what makes you stand out."</div>
+          <div class="conviction-line">"Everyone has the degree. Almost no one has this."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEVER SAY -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🚫</span> Never Say</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="never-say-list">
+          <div class="never-say-item">"Holiday" or "experience" as the hook — outcome first, always</div>
+          <div class="never-say-item">"Adult-only" — say: "you'll be in a cohort at your level, with people at the same crossroads"</div>
+          <div class="never-say-item">"Improve your English" — say: "get the edge", "become the obvious hire", "close the gap"</div>
+          <div class="never-say-item">"2 weeks" — 6 weeks is the default; shorter only if genuinely constrained</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEARS -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">😟</span> Fears &amp; EF Responses</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="data-table">
+          <thead><tr><th>Fear</th><th>EF Response</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="fear">Will this actually help me get hired?</td>
+              <td>Yes — but lead with proof, not reassurance. CASC certificate and a career city on the CV. A network from 50 countries. That's a hiring story, not a holiday story.</td>
+            </tr>
+            <tr>
+              <td class="fear">Will I be in a class of teenagers?</td>
+              <td>Classes are formed by level. You'll be with people who tested at the same level — and a significant portion will be at your life stage. Teachers are specialists in adult learning.</td>
+            </tr>
+            <tr>
+              <td class="fear">My parents say I need a real job now.</td>
+              <td>Frame it as the investment that pays back before the 1st job — cheaper than a postgrad, sharper than a gap year.</td>
+            </tr>
+            <tr>
+              <td class="fear">Will it be effective? I've tried apps.</td>
+              <td>Immersion produces language progress up to 11 times faster than classroom-only or app-based study. And EF's Learning Guarantee backs it: one level every 6 weeks with full attendance — or you study for free.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- OBJECTION HANDLING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">⚡</span> Objection Handling</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="data-table">
+          <thead><tr><th>Objection</th><th>How to Respond</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="obj">"Is this going to help me get a job?"</td>
+              <td>Lead with outcomes: "You leave with a CASC certificate, CEFR-verified fluency, and experience in a career city. That's not just better English — it's a hiring story." Then: "What specific role or city are you targeting?"</td>
+            </tr>
+            <tr>
+              <td class="obj">"I should be job-hunting right now."</td>
+              <td>This is the job-hunting. Everyone applying alongside you has the same degree. The question is what makes you the obvious hire — and what it costs your career to keep not having it. 6 weeks now vs. still searching next year.</td>
+            </tr>
+            <tr>
+              <td class="obj">"It's too expensive."</td>
+              <td>"How much does not having this language cost your career? The certificate alone is worth more than most postgrad modules at a fraction of the price. And many students split this into 2 or 3 shorter visits."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Six weeks is too long."</td>
+              <td>"I hear that. A lot of students break it up — three 2-week blocks over 12 to 18 months, each one advancing you a level. So you're never gone for long, but you're consistently progressing and have something concrete to show each time you return."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Will I be in class with teenagers?"</td>
+              <td>"Classes are formed by level — your test result puts you with people who tested the same, regardless of age. EF schools do attract younger learners too, so you'll have a mix — and a meaningful portion at your stage. The teachers are the constant: expert communicative-method instructors who know how to move adults fast."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Accommodation: I want my space."</td>
+              <td>"Single rooms are available in residence and carefully vetted homestay — which adds immersion around meals and in the evenings. Either way, your own private space."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Will I get a recognized certificate?"</td>
+              <td>"You'll receive a CASC certificate — a formal credential you put on your CV that shows verified language skills in your specific field, at a certified CEFR level. It's not just a completion certificate; it's evidence of attainment."</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎯</span> Closing Technique</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <p style="font-size:13px;color:#334;margin-bottom:10px">Close on departure-date urgency. The window shuts when the first job starts.</p>
+        <div class="closing-quote">
+          <p>"The cohorts in [city] for [month] have places now. The students who book before they start working are always the ones who say they'd have waited too long if they hadn't. What's your timeline before the job search gets serious?"</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- /graduate -->
+
+  <!-- ═══ 02 PROFESSIONAL ═══ -->
+  <div class="seg-group visible" data-seg="professional">
+    <div class="seg-header" style="background:var(--prof)">
+      <div class="seg-num">02</div>
+      <div class="seg-title">PROFESSIONAL</div>
+      <div class="seg-tagline">Aspirational · work &amp; life mobility · "You know where you're going. We remove what's in the way."</div>
+    </div>
+
+    <!-- TONE -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎙</span> Tone</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="tone-box">
+          <p><strong>Consultant-direct, deliberate, self-assured, confirmatory.</strong> Respects their intelligence and their honest time pressure. Assumes they've already tried alternatives. No soft-selling. No fluff.</p>
+          <p style="margin-top:8px">Never: use soft language or say "don't worry it'll be fine." Give hard data. Get to outcomes fast. This buyer cuts through pitches — match their pace.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAMPLE PERSONA -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">👤</span> Example Persona</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="persona-card">
+          <div class="persona-avatar" style="background:var(--prof)">M</div>
+          <div class="persona-info">
+            <div class="persona-name">Marco, 38</div>
+            <div class="persona-meta">Director of Operations · passed over twice for VP EMEA · 20-minute call window</div>
+            <div class="persona-quote">"I've tried apps and evening classes. Nothing has stuck. I need to know quickly whether EF's professional program is actually different — because I can't afford to be away from work for weeks and I need results."</div>
+            <div class="persona-fears">
+              <div class="label">He'll raise</div>
+              <div class="fear-chips">
+                <span class="fear-chip" style="background:#EAF0FF;color:var(--prof)">Why will this work?</span>
+                <span class="fear-chip" style="background:#EAF0FF;color:var(--prof)">Time away from work</span>
+                <span class="fear-chip" style="background:#EAF0FF;color:var(--prof)">Peer-level cohort?</span>
+                <span class="fear-chip" style="background:#EAF0FF;color:var(--prof)">ROI / bilingual premium</span>
+                <span class="fear-chip" style="background:#EAF0FF;color:var(--prof)">Employer sponsorship</span>
+                <span class="fear-chip" style="background:#EAF0FF;color:var(--prof)">Credentials to show HR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPENING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💬</span> Opening Approach</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="opening-box">
+          <div class="opening-question">Ask: "What role or move is this unlocking for you?"</div>
+          <div class="opening-followup">Then: "What's the one thing standing between you and it right now?" Let them name language. Then:</div>
+          <div class="opening-pivot">"That's exactly what we solve — and fast. 6 weeks of immersion produces more progress than most people achieve in two years of evening classes. And we build in the professional credentials."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KSPs -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">⭐</span> Key Selling Points</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="ksp-list">
+          <div class="ksp-item"><strong>Speed:</strong> immersion accelerates progress up to 11× faster than standard classroom study.</div>
+          <div class="ksp-item"><strong>EF Pro Track</strong> — purpose-built professional course curriculum: Business English through case studies, Career development, Communication skills for professionals, Entrepreneurship &amp; AI readiness.</div>
+          <div class="ksp-item"><strong>CASC credentials</strong> in Business English, Communication Skills for Professionals, IELTS prep, and Cambridge — formal verification of professional-level attainment, not a participation certificate.</div>
+          <div class="ksp-item">Classes formed by level — you're with peers who tested at the same point. Teachers are experienced communicative-method specialists; consistently what students cite as the most valuable part of EF.</div>
+          <div class="ksp-item">A-Z professional handling: visa guidance, accommodation, transfers, 24/7 on-site support. EF manages the logistics so the Professional can focus on the outcome.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRO TRACK -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💼</span> EF Pro Track Features</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="pro-grid">
+          <div class="pro-card">
+            <div class="pro-card-title">SPINs (Course Classes)</div>
+            <div class="pro-card-content">Business English through real case studies · Career development · Communication skills for professionals · Entrepreneurship &amp; AI readiness · IELTS preparation · Cambridge exam prep</div>
+          </div>
+          <div class="pro-card">
+            <div class="pro-card-title">Professional Clubs &amp; Activities</div>
+            <div class="pro-card-content">Business Debate Club · Presentation Lab · Networking Circle · Mock Meetings · Company visits · Networking dinners · LinkedIn workshop · Mock interviews · Professional district walks</div>
+          </div>
+          <div class="pro-card">
+            <div class="pro-card-title">1:1 Learning Outcomes Reviews</div>
+            <div class="pro-card-content">Personalised progress tracking with a teacher — tied directly to the professional goal.</div>
+          </div>
+          <div class="pro-card">
+            <div class="pro-card-title">Language for Work Destinations</div>
+            <div class="pro-card-content">DUB · MAN · LON · NYC · SYD · SIN · CAP — career cities where the environment reinforces the goal every day.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVICTION LINES -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💡</span> Conviction Lines</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="conviction-lines">
+          <div class="conviction-line">"You know what you want. We remove what's in the way."</div>
+          <div class="conviction-line">"Language fluency isn't a nice-to-have. It's your next promotion."</div>
+          <div class="conviction-line">"X weeks away now vs. X years of slow progress at home. You choose."</div>
+          <div class="conviction-line">"This is the fastest credentialled route from intention to fluency. Full stop."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEVER SAY -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🚫</span> Never Say</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="never-say-list">
+          <div class="never-say-item">"Holiday" or "adventure" — this is about an outcome, not an experience</div>
+          <div class="never-say-item">"Adult-only" — say: "you'll be in a cohort at your professional level, with peers who are equals"</div>
+          <div class="never-say-item">"Internationally recognized" for CASC — say: "a CASC certificate demonstrating verified professional-level language skills"</div>
+          <div class="never-say-item">"2 weeks" as the default — 6 weeks is the minimum meaningful commitment for this buyer</div>
+          <div class="never-say-item">Soft reassurance — no "don't worry, it'll be fine." This buyer wants evidence and outcomes.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEARS -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">😟</span> Fears &amp; EF Responses</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="data-table">
+          <thead><tr><th>Fear</th><th>EF Response</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="fear">No real progress — I've tried this before.</td>
+              <td>Immersion is categorically different from apps or tutors: 6 weeks produces more progress than most people achieve in 2 years of evening classes. And EF's Learning Guarantee backs it.</td>
+            </tr>
+            <tr>
+              <td class="fear">I can't afford to be away from work.</td>
+              <td>Frame it: 6 weeks away now vs. 4 years of slow progress. What does the promotion or the move unlock financially? The time cost is real — the opportunity cost of not going is bigger.</td>
+            </tr>
+            <tr>
+              <td class="fear">Will I be in a class of teenagers?</td>
+              <td>Classes are formed by level — you'll be with people who tested at the same professional point. EF schools attract a mix of ages, with a significant proportion of working professionals, especially in career cities.</td>
+            </tr>
+            <tr>
+              <td class="fear">Is the ROI real? Bilingual premium?</td>
+              <td>Yes — and the data supports it: bilingual employees earn 10–20% more than equivalent monolingual peers. LinkedIn ranks language skills in the top 10 most in-demand capabilities globally.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- OBJECTION HANDLING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">⚡</span> Objection Handling</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="data-table">
+          <thead><tr><th>Objection</th><th>How to Respond</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="obj">"I can't be away for six weeks."</td>
+              <td>"I hear that — it's the number one concern for this buyer. Let's reframe it: what does 6 weeks away now cost you vs. what does not having the language cost you over the next 4 years? Many professionals also build it across 3 × 2-week blocks."</td>
+            </tr>
+            <tr>
+              <td class="obj">"I want to make sure I'll actually make progress."</td>
+              <td>1. 6-hour immersive days produce more than 2 years of evening classes (research). 2. EF's Learning Guarantee: one full level every 6 weeks with full attendance — or study for free. 3. 1:1 outcomes reviews track progress against your specific professional goal.</td>
+            </tr>
+            <tr>
+              <td class="obj">"Is this worth the cost right now?"</td>
+              <td>"What does the role you're targeting pay above what you earn now? The question isn't what EF costs — it's what language fluency is worth. Bilingual professionals earn 10–20% more. What's your target role worth annually?"</td>
+            </tr>
+            <tr>
+              <td class="obj">"Will I be with professionals like me?"</td>
+              <td>"Classes are formed by level, not age or background. That said, EF's professional campuses — DUB, MAN, LON, NYC — attract a significant proportion of working adults. You'll be with people who are also running on a stopwatch."</td>
+            </tr>
+            <tr>
+              <td class="obj">"What makes EF different from other language schools?"</td>
+              <td>"60 years of adult language teaching. Owned schools — not franchises — in 50+ destinations. The Pro Track curriculum built specifically for working professionals. And the only school with 1:1 progress reviews tied to your specific outcome."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Where should I go?"</td>
+              <td>"That depends on the unlock. If it's Business English for an international role: London, Dublin, New York, or Singapore. If it's French for a Paris or Geneva role: Nice, Paris. If it's Spanish: Barcelona or Madrid."</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎯</span> Closing Technique</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <p style="font-size:13px;color:#334;margin-bottom:10px">Close on the specific unlock. Name the role, city or outcome. Remove time as the objection.</p>
+        <div class="closing-quote">
+          <p>"You've told me the promotion is in [city/function] and language is the one block. I can put you in front of a 1:1 outcomes review from day one, in [destination], on a start date that works before [their timeline]. The cohort for [month] has availability now. Do you want to build the schedule around that?"</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- /professional -->
+
+  <!-- ═══ 03 RESETTER ═══ -->
+  <div class="seg-group visible" data-seg="resetter">
+    <div class="seg-header" style="background:var(--reset)">
+      <div class="seg-num">03</div>
+      <div class="seg-title">RESETTER</div>
+      <div class="seg-tagline">Transformational · life &amp; identity reset · "This is not a holiday. It's a decision about who you want to be."</div>
+    </div>
+
+    <!-- TONE -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎙</span> Tone</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="tone-box">
+          <p><strong>Deliberate, self-assured, confirmatory.</strong> You are agreeing with a decision they've already half-made — not selling them something new. Warm, never pushy. Respects the weight of the moment.</p>
+          <p style="margin-top:8px">Never: be salesy or apply pressure. Never raise age proactively. Focus on the experience and community before logistics. Never say "escape", "getaway" or "treat yourself."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAMPLE PERSONA -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">👤</span> Example Persona</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="persona-card">
+          <div class="persona-avatar" style="background:var(--reset)">C</div>
+          <div class="persona-info">
+            <div class="persona-name">Claudia, 47</div>
+            <div class="persona-meta">HR professional 20 years · empty nest since last autumn · friend came back "a completely different person"</div>
+            <div class="persona-quote">"I've always meant to fix my Spanish. My friend came back from Málaga changed. I'm not sure if now is the right time — but I've been saying that for years. I feel a bit guilty spending this much on myself."</div>
+            <div class="persona-fears">
+              <div class="label">She'll raise</div>
+              <div class="fear-chips">
+                <span class="fear-chip" style="background:#FFF0F5;color:var(--reset)">Is this self-indulgent?</span>
+                <span class="fear-chip" style="background:#FFF0F5;color:var(--reset)">Too old to learn?</span>
+                <span class="fear-chip" style="background:#FFF0F5;color:var(--reset)">Surrounded by students?</span>
+                <span class="fear-chip" style="background:#FFF0F5;color:var(--reset)">Can I go 3 weeks?</span>
+                <span class="fear-chip" style="background:#FFF0F5;color:var(--reset)">Travelling solo</span>
+                <span class="fear-chip" style="background:#FFF0F5;color:var(--reset)">Own room non-negotiable</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPENING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💬</span> Opening Approach</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="opening-box">
+          <div class="opening-question">Ask: "What opened up that's making you think about this now?"</div>
+          <div class="opening-followup">Let them name the trigger — milestone, empty nest, relationship change, burnout. You're confirming a decision they've already half made.</div>
+          <div class="opening-pivot">"What you're describing is exactly the moment this trip is designed for. Not a break — a chapter. The people who come back and say it changed everything are the ones who went when the window opened, not when it felt perfectly convenient."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KSPs -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">⭐</span> Key Selling Points</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="ksp-list">
+          <div class="ksp-item">This is a life decision, not a purchase. Frame as investment in the next version of themselves.</div>
+          <div class="ksp-item">A community of people who made the same decision at the same moment — <strong>like-minded adults at a similar life stage.</strong> Classes formed by level; teachers are what returners cite most on reflection.</div>
+          <div class="ksp-item"><strong>Culture Unlocked destinations:</strong> Rome (gastronomy &amp; art), Málaga, Barcelona, Nice/Paris (art &amp; culture), Cape Town, Dublin — environments that sustain the transformation.</div>
+          <div class="ksp-item"><strong>Accommodation:</strong> single rooms in residence, or carefully vetted homestay families for those who want daily immersion — meals, conversation, and local life around the clock.</div>
+          <div class="ksp-item">A-Z support — visa guidance, transfers, accommodation, 24/7 on-site help. EF manages every logistical detail so the only thing to focus on is the experience itself.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVICTION LINES -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💡</span> Conviction Lines</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="conviction-lines">
+          <div class="conviction-line">"You don't need permission. You need a plane ticket and six weeks."</div>
+          <div class="conviction-line">"The thing you always meant to do — it's now."</div>
+          <div class="conviction-line">"This is not a holiday. It's a decision about who you want to be."</div>
+          <div class="conviction-line">"You've spent years investing in everyone else. This is the chapter that's yours."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEVER SAY -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🚫</span> Never Say</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="never-say-list">
+          <div class="never-say-item">"Escape", "getaway", "treat yourself" — this is a chapter, not a break</div>
+          <div class="never-say-item">"Adult-only" — say: "you'll meet like-minded people at a similar life stage"</div>
+          <div class="never-say-item">"4 weeks" — 6 weeks is the default; anything shorter dilutes the transformation narrative</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEARS -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">😟</span> Fears &amp; EF Responses</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="data-table">
+          <thead><tr><th>Fear</th><th>EF Response</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="fear">Isn't this self-indulgent?</td>
+              <td>Name it and reframe it: "You've spent years investing in everyone else. This is you deciding the next chapter is worth investing in. That's not self-indulgence — that's a decision."</td>
+            </tr>
+            <tr>
+              <td class="fear">Am I too old to learn a language?</td>
+              <td>Only address this if they raise it. Then: "Adults actually acquire language fast under immersion — the research is consistent. And neuroscience shows that language learning builds cognitive reserve. This isn't a risk — it's one of the best things you can do."</td>
+            </tr>
+            <tr>
+              <td class="fear">Will I be surrounded by teenagers?</td>
+              <td>Classes are formed by level — you'll be placed with people who tested at the same point. EF schools attract a broad mix of ages, but in our Culture &amp; Discovery programmes, like-minded adults at a similar life stage make up the community.</td>
+            </tr>
+            <tr>
+              <td class="fear">What if it's just another holiday?</td>
+              <td>A holiday ends and you're the same. This is built to change how you operate — which is why we recommend six weeks and a real school. The people who say it changed everything are the ones who gave it the time it needed.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- OBJECTION HANDLING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">⚡</span> Objection Handling</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="data-table">
+          <thead><tr><th>Objection</th><th>How to Respond</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="obj">"It's expensive."</td>
+              <td>"The question isn't how much it costs — it's what it costs you to keep not doing it. What sets this apart — a real school, a community of adults who made the same choice, a single room, a destination with culture built into it — that's what this is."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Six weeks is a long time to be away."</td>
+              <td>"I hear that — and six weeks is what produces the change. But a lot of people break it into three 2-week visits over 12 to 18 months — each one building on the last. You're never away for long, but you're always moving forward."</td>
+            </tr>
+            <tr>
+              <td class="obj">"I'm worried I will be too slow."</td>
+              <td>"You'll start with a placement test and be placed at your exact level — not with people above or below you. EF's Learning Guarantee means you advance a full level every 6 weeks with full attendance — or you come back for free."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Will I find people to connect with?"</td>
+              <td>"That's the whole point of the experience — and it's what returners say they didn't expect to value as much as they do. You'll be with people who made exactly the same decision at exactly the same moment in their lives."</td>
+            </tr>
+            <tr>
+              <td class="obj">"I've never done this alone."</td>
+              <td>"EF handles everything: visa guidance, accommodation, airport transfers, meal plans, and 24/7 on-site support. The only thing you arrange is getting to the airport."</td>
+            </tr>
+            <tr>
+              <td class="obj">"What if I want my own space?"</td>
+              <td>"Single rooms are the norm for this experience. If you want to go deeper into local culture, our vetted homestay families offer daily immersion — meals, conversation, local life. Either way, it's your own private space."</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LOYAL COMMUNITY -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🤝</span> Loyal Community</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="loyal-box">
+          <div class="loyal-title">This trip is a chapter, not the whole story.</div>
+          <div class="loyal-items">
+            <div class="loyal-item"><strong>Returners</strong> Many students come back for their second level — or bring someone with them.</div>
+            <div class="loyal-item"><strong>Referrers</strong> The Bring a Friend programme turns the most powerful moment — "I went; come with me next time" — into a structured mechanic. Introduce it at booking, not after.</div>
+            <div class="loyal-item"><strong>Ambassadors</strong> EF's growing community of informal advocates. The Resetter who came back changed is the most persuasive proof asset for every other segment — capture their story.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎯</span> Closing Technique</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <p style="font-size:13px;color:#334;margin-bottom:10px">Close on the destination and the experience — paint it in detail. Then close on the single room.</p>
+        <div class="closing-quote">
+          <p>"You said Málaga feels right — or Rome? Let me walk you through what the first week actually looks like: you arrive, you're met, you're placed in a class at your level the next morning, and by Thursday you're speaking in the language at dinner with people who chose the same thing you did. Single room if you choose to. The cohort for [month] has availability. What's the one thing stopping you from booking that today?"</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- /resetter -->
+
+  <!-- ═══ 04 EXPLORER ═══ -->
+  <div class="seg-group visible" data-seg="explorer">
+    <div class="seg-header" style="background:var(--explor)">
+      <div class="seg-num">04</div>
+      <div class="seg-title">EXPLORER</div>
+      <div class="seg-tagline">Experiential · life adventure &amp; discovery · "Some people retire. Others explore."</div>
+    </div>
+
+    <!-- TONE -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎙</span> Tone</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="tone-box">
+          <p><strong>Dignified, warm, lightly witty, genuinely optimistic.</strong> Never patronising. Speak to their appetite, not their age. Assumes they've already seen a lot and want to keep going.</p>
+          <p style="margin-top:8px">Two rules you never break: (1) <strong>Zero "senior" framing — never mention age proactively.</strong> (2) <strong>Sell a tribe, not just a trip</strong> — community that outlasts the programme is what this buyer buys.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAMPLE PERSONA -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">👤</span> Example Persona</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="persona-card">
+          <div class="persona-avatar" style="background:var(--explor)">P</div>
+          <div class="persona-info">
+            <div class="persona-name">Peter, 63</div>
+            <div class="persona-meta">Retired engineer · granddaughter is bilingual (Italian father) · colleague sent photos from Rome</div>
+            <div class="persona-quote">"A colleague who is 65 sent me photos from his EF stay in Rome. I've been looking at the website for weeks. I want to finally learn Italian. What does the programme actually look like for someone in my situation?"</div>
+            <div class="persona-fears">
+              <div class="label">He'll raise</div>
+              <div class="fear-chips">
+                <span class="fear-chip" style="background:#E8F5F3;color:var(--explor)">Will the pace suit me?</span>
+                <span class="fear-chip" style="background:#E8F5F3;color:var(--explor)">Who else will be there?</span>
+                <span class="fear-chip" style="background:#E8F5F3;color:var(--explor)">Logistics solo</span>
+                <span class="fear-chip" style="background:#E8F5F3;color:var(--explor)">Single room / homestay</span>
+                <span class="fear-chip" style="background:#E8F5F3;color:var(--explor)">How long?</span>
+                <span class="fear-chip" style="background:#E8F5F3;color:var(--explor)">Can I return?</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPENING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💬</span> Opening Approach</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="opening-box">
+          <div class="opening-question">Ask: "What language have you always meant to learn — and what's finally making this the right time?"</div>
+          <div class="opening-followup">Listen for the trigger. Reflect the appetite, not the age. Then:</div>
+          <div class="opening-pivot">"What you're describing isn't a trip you take once and tick off. It's a lifestyle you step into. The people who thrive in EF's adult cohorts decided the interesting part of life wasn't over — it was just getting less crowded."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KSPs -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">⭐</span> Key Selling Points</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="ksp-list">
+          <div class="ksp-item"><strong>A tribe, not just a trip</strong> — community that outlasts the programme. EF's alumni network is active long after the return: WhatsApp groups, returning cohorts, shared trips planned together.</div>
+          <div class="ksp-item"><strong>Culture Unlocked destinations for Explorers:</strong> MSJ, MAN, CAP, MAA, ROM — schools with a high concentration of adult learners and rich local culture around them.</div>
+          <div class="ksp-item">Accommodation built for comfort: single rooms in residence and carefully vetted homestay families for those who want daily immersion.</div>
+          <div class="ksp-item">EF handles everything end to end — visa guidance, airport transfers, accommodation, meal plans, and 24/7 on-site support. Sixty years of exactly this.</div>
+          <div class="ksp-item"><strong>Neuroscience proof point:</strong> learning a new language is one of the most effective evidence-based brain health investments available. Bilingual adults show symptoms of cognitive decline up to 5 years later than monolingual peers.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVICTION LINES -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">💡</span> Conviction Lines</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="conviction-lines">
+          <div class="conviction-line">"Some people retire. Others explore."</div>
+          <div class="conviction-line">"The best experiences aren't behind you. They're the ones you haven't booked yet."</div>
+          <div class="conviction-line">"You didn't come to observe the place. You came to be part of it."</div>
+          <div class="conviction-line">"Still learning. Still going. Still becoming."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEVER SAY -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🚫</span> Never Say</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="never-say-list">
+          <div class="never-say-item">"Senior" / "elderly" / "for your age" / "still sharp" — never. Speak to their appetite.</div>
+          <div class="never-say-item">"Adult-only guaranteed" — say: "you'll be with like-minded people who made the same choice"</div>
+          <div class="never-say-item">Any framing of this as leisure, a tour, or "well-earned rest"</div>
+          <div class="never-say-item">"4 weeks" — 6 weeks is the minimum to build the community; shorter trips don't sustain it</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEARS -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">😟</span> Fears &amp; EF Responses</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="data-table">
+          <thead><tr><th>Fear</th><th>EF Response</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="fear">Will the programme be too fast for me?</td>
+              <td>You'll be placed at your exact level after a placement test — with people who tested the same. EF's Learning Guarantee: one level every 6 weeks with full attendance — or you continue for free.</td>
+            </tr>
+            <tr>
+              <td class="fear">Will I be the odd one out / alone?</td>
+              <td>Lead with community proof: "The whole point is the opposite. The people who thrive here are still in contact with the people they met — and many come back together the following year."</td>
+            </tr>
+            <tr>
+              <td class="fear">Is the learning effective at my age?</td>
+              <td>If they raise it: "The research is clear — adults under immersion progress fast. And neuroscience shows that language learning is one of the best brain health investments available. Bilingual adults show cognitive decline up to 5 years later."</td>
+            </tr>
+            <tr>
+              <td class="fear">Can I manage the travel on my own?</td>
+              <td>EF handles visas, transfers, accommodation, and 24/7 on-site support. The only thing to arrange is the flight. 60 years of doing exactly this.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- OBJECTION HANDLING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">⚡</span> Objection Handling</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table class="data-table">
+          <thead><tr><th>Objection</th><th>How to Respond</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="obj">"Will I be able to keep up in class?"</td>
+              <td>"You'll be placed by a placement test, not by age or assumption — so you start at exactly the right level. The teaching is communicative immersion: you're using the language from day one, not studying about it."</td>
+            </tr>
+            <tr>
+              <td class="obj">"I'm past sharing rooms with strangers."</td>
+              <td>"So are we, for this experience. Single rooms are the standard — and for those who want to go deeper into local life, our vetted homestay families offer daily immersion — meals, conversation, and local culture around the clock."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Six weeks feels like a long commitment."</td>
+              <td>"Six weeks is where the community forms — it's what converts a course into a lifestyle. That said, many students build it up: three 2-week blocks over 12 to 18 months — each one building on the last."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Will I find people I actually connect with?"</td>
+              <td>"The testimonial answer beats anything I can say: 58 years old, school in Rome, made friends from 51 to 67. WhatsApp group still active a year later. That's what EF looks like for this experience."</td>
+            </tr>
+            <tr>
+              <td class="obj">"Am I too old to learn a language?"</td>
+              <td>"You're not — and the science says so. Adults under immersion progress faster than most people assume, especially with EF's communicative method. And bilingual adults show cognitive decline up to 5 years later. This is one of the best things you can do."</td>
+            </tr>
+            <tr>
+              <td class="obj">"What about logistics — I've never done this alone."</td>
+              <td>"EF coordinates everything: visa guidance, airport transfers, accommodation, meal plans, and 24/7 on-site support. You don't navigate any of it alone. 60 years of doing exactly this."</td>
+            </tr>
+            <tr>
+              <td class="obj">"It's expensive."</td>
+              <td>"This is what a complete experience looks like — owned school, single room, vetted teaching, A-Z support, and a community that keeps going. The question is what the next chapter of your life is worth investing in."</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LOYAL COMMUNITY -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🤝</span> Loyal Community</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="loyal-box">
+          <div class="loyal-title">This trip is a chapter, not the whole story.</div>
+          <div class="loyal-items">
+            <div class="loyal-item"><strong>Returners</strong> EF's current adult return rate is 13% — the target is 30%. The Explorer is EF's most natural returner: their chapter keeps going, the community pulls them back. Normalise the return from the first conversation.</div>
+            <div class="loyal-item"><strong>Referrers</strong> "Bring a Friend" is the highest-converting channel for this buyer. The Explorer's peer group trusts peer proof above everything else. Seed the referral at booking, and again at end of trip.</div>
+            <div class="loyal-item"><strong>Ambassadors</strong> EF's 50+ Ambassador pilot lives here. Explorers become informal recruiters in their social and professional circle — they don't just refer; they recruit. Treat the Ambassador programme as a core deliverable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="section">
+      <div class="section-hd" onclick="toggleSection(this)">
+        <h3><span class="ico">🎯</span> Closing Technique</h3>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <p style="font-size:13px;color:#334;margin-bottom:10px">Close on the community and the imagine. Walk them through the 1st week in vivid detail.</p>
+        <div class="closing-quote">
+          <p>"You said Malta feels right — or Rome. Let me walk you through it: you arrive Sunday, you're met at the airport (if transfer), Monday morning you're in a class of people at your level who also chose this. By Thursday evening you're having dinner with three of them and a local guide. By the end of week two there's a WhatsApp group and a plan to meet somewhere else next year. That's what EF looks like — not a course, a chapter. The cohort for [month] has availability. Shall we lock in your room?"</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- /explorer -->
+
+</div><!-- /main -->
+
+<script>
+function setFilter(seg) {
+  // Update button states
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.className = 'filter-btn';
+    if (b.getAttribute('onclick').includes("'" + seg + "'")) {
+      b.className = 'filter-btn active-' + seg;
+    }
+  });
+
+  // Show/hide segment groups
+  document.querySelectorAll('.seg-group[data-seg]').forEach(g => {
+    const gSeg = g.getAttribute('data-seg');
+    if (seg === 'all' || gSeg === seg) {
+      g.style.display = '';
+    } else {
+      g.style.display = 'none';
+    }
+  });
+
+  // Scroll to first visible segment
+  if (seg !== 'all') {
+    const el = document.querySelector('.seg-group[data-seg="' + seg + '"]');
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function toggleSection(hd) {
+  const body = hd.nextElementSibling;
+  const isOpen = hd.classList.contains('open');
+  if (isOpen) {
+    hd.classList.remove('open');
+    body.classList.remove('open');
+    body.style.display = 'none';
+  } else {
+    hd.classList.add('open');
+    body.classList.add('open');
+    body.style.display = 'block';
+  }
+}
+
+// Initialize: only Tone and Example Persona open by default; rest collapsed
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.section-body').forEach(b => {
+    if (!b.classList.contains('open')) b.style.display = 'none';
+  });
+});
+</script>
+</body>
+</html>

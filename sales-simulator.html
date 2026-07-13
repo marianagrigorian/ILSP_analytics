@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sales Pitch Simulator — EF Adults</title>
+<title>Segmented Sales Scripts — EF Adults</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Futura','Century Gothic','Avenir',system-ui,sans-serif;background:#f0f3f7;color:#191919}
@@ -116,6 +116,41 @@ html,body{height:100%;font-family:'Futura','Century Gothic','Avenir',system-ui,s
 
 .btn-new{display:block;width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:16px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;text-align:center;margin-top:22px;transition:background .15s;letter-spacing:.02em}
 .btn-new:hover{background:#004e7a}
+
+/* ── HUB PAGE ── */
+.hub-wrap{max-width:900px;margin:0 auto;padding:36px 32px 64px;width:100%}
+.hub-title-block{margin-bottom:32px}
+.hub-title-block h2{font-size:28px;font-weight:800;color:var(--blue);letter-spacing:-.01em;margin-bottom:6px}
+.hub-title-block h2 span{color:var(--pink)}
+.hub-title-block p{font-size:13px;color:#667;line-height:1.65;max-width:560px}
+.hub-boxes{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:40px}
+@media(max-width:600px){.hub-boxes{grid-template-columns:1fr}}
+.hub-box{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);transition:transform .15s,box-shadow .15s;text-decoration:none;color:inherit;display:flex;flex-direction:column;border:2px solid transparent;cursor:pointer}
+.hub-box:hover:not(.disabled){transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.14);border-color:var(--lb)}
+.hub-box.disabled{cursor:default;opacity:.6}
+.hub-box-stripe{height:5px}
+.hub-box-body{padding:26px 24px 20px;flex:1}
+.hub-box-icon{font-size:32px;margin-bottom:12px}
+.hub-box-title{font-size:18px;font-weight:800;color:var(--blue);margin-bottom:6px}
+.hub-box-desc{font-size:12.5px;color:#667;line-height:1.65}
+.hub-box-foot{padding:14px 24px;background:#f7f9fb;border-top:1px solid #eef1f4;display:flex;align-items:center;justify-content:space-between}
+.hub-box-tag{font-size:10px;font-weight:800;padding:3px 10px;border-radius:12px}
+.hub-box-arrow{font-size:18px;color:#ccc;transition:color .15s}
+.hub-box:hover:not(.disabled) .hub-box-arrow{color:var(--lb)}
+.cs-tag{background:#f0f3f7;color:#999;font-size:10px;font-weight:800;padding:3px 10px;border-radius:12px;letter-spacing:.05em}
+.hub-section-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--lb);width:fit-content}
+.hub-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:32px}
+.hub-card{background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.07);overflow:hidden;text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.hub-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.hub-card-stripe{height:4px}
+.hub-card-body{padding:18px 20px 14px;flex:1}
+.hub-card-icon{font-size:24px;margin-bottom:10px}
+.hub-card-title{font-size:14px;font-weight:800;color:var(--blue);margin-bottom:5px}
+.hub-card-desc{font-size:12px;color:#667;line-height:1.55}
+.hub-card-foot{padding:11px 20px;background:#f7f9fb;border-top:1px solid #eef1f4;display:flex;align-items:center;gap:7px}
+.hub-card-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.hub-card-arrow{margin-left:auto;font-size:15px;color:#ccc;transition:color .15s}
+.hub-card:hover .hub-card-arrow{color:var(--lb)}
 
 /* ── API KEY SETUP ── */
 .setup-wrap{max-width:460px;margin:80px auto;padding:0 24px}
@@ -324,7 +359,7 @@ ONE THING TO REMEMBER
 // ════════════════════════════════════════════════════════════════════
 
 let S = {
-  screen: localStorage.getItem('ef_sim_key') ? 'selector' : 'setup',
+  screen: 'hub',
   segKey: null,
   msgs: [],
   turns: 0,
@@ -455,7 +490,7 @@ Please evaluate this conversation using the required format.`;
 }
 
 function reset() {
-  S = { screen: 'selector', segKey: null, msgs: [], turns: 0, loading: false, loadingMsg: '', err: null, fbText: '', fbScore: null };
+  S = { screen: 'hub', segKey: null, msgs: [], turns: 0, loading: false, loadingMsg: '', err: null, fbText: '', fbScore: null };
   render();
   window.scrollTo(0, 0);
 }
@@ -483,15 +518,112 @@ function esc(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function topBar(showBack) {
+function topBar(showBack, backLabel) {
   return `<div class="top-bar">
     <div class="accent-bar"></div>
-    ${showBack ? `<button class="back-btn" onclick="reset()">← Back</button>` : ''}
+    ${showBack ? `<button class="back-btn" onclick="reset()">← ${backLabel||'Back'}</button>` : ''}
     <h1>EF Analytics</h1>
-    <span class="sub">${showBack?'':'Sales Simulator'}</span>
+    <span class="sub">${showBack?'':'Segmented Sales Scripts'}</span>
     <div class="spacer"></div>
     <button class="key-btn" onclick="clearKey()" title="Change API key">🔑 API Key</button>
     <span class="badge">TRAINING TOOL</span>
+  </div>`;
+}
+
+function renderHub() {
+  return `${topBar(false)}
+  <div class="hero">
+    <h2>Segmented Sales <span>Scripts</span></h2>
+    <p>EF Adults v5.5 — interactive scripts for all four buyer segments, plus an AI-powered pitch simulator.</p>
+  </div>
+  <div class="hub-wrap">
+
+    <div class="hub-boxes">
+
+      <a href="script-viewer.html" class="hub-box" style="text-decoration:none">
+        <div class="hub-box-stripe" style="background:var(--pink)"></div>
+        <div class="hub-box-body">
+          <div class="hub-box-icon">📋</div>
+          <div class="hub-box-title">Read Script</div>
+          <div class="hub-box-desc">Interactive v5.5 scripts with persona filter, collapsible sections, conviction lines, objection handling, never-say rules, fears, and closing techniques — all four segments.</div>
+        </div>
+        <div class="hub-box-foot">
+          <span class="hub-box-tag" style="background:#fde8f3;color:#c4006b">4 Segments · v5.5</span>
+          <span class="hub-box-arrow">→</span>
+        </div>
+      </a>
+
+      <div class="hub-box disabled">
+        <div class="hub-box-stripe" style="background:#dde2e8"></div>
+        <div class="hub-box-body">
+          <div class="hub-box-icon">🎭</div>
+          <div class="hub-box-title">Simulate Conversation</div>
+          <div class="hub-box-desc">Practise your EF Adults pitch with AI-powered customer personas. Each persona raises real objections from v5.5. Get detailed feedback and a score at the end.</div>
+        </div>
+        <div class="hub-box-foot">
+          <span class="cs-tag">COMING SOON</span>
+          <span class="hub-box-arrow">→</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="hub-section-label">Analytics Dashboards</div>
+    <div class="hub-cards">
+
+      <a href="adults_market_deepdives.html" class="hub-card">
+        <div class="hub-card-stripe" style="background:var(--pink)"></div>
+        <div class="hub-card-body">
+          <div class="hub-card-icon">📊</div>
+          <div class="hub-card-title">Adults Market Deep Dives</div>
+          <div class="hub-card-desc">25–30, 31–49 and 50+ segments across all focus markets. Students, booking trends, destinations, language choice, EXPAX rates.</div>
+        </div>
+        <div class="hub-card-foot">
+          <span class="hub-card-tag" style="background:#fde8f3;color:#c4006b">D2D · TGS · MKT</span>
+          <span class="hub-card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="acquisition_insights.html" class="hub-card">
+        <div class="hub-card-stripe" style="background:var(--lb)"></div>
+        <div class="hub-card-body">
+          <div class="hub-card-icon">📈</div>
+          <div class="hub-card-title">Acquisition Insights</div>
+          <div class="hub-card-desc">Marketing spend, channel performance, and booking conversion by age group and market. CPB benchmarks and efficiency trends.</div>
+        </div>
+        <div class="hub-card-foot">
+          <span class="hub-card-tag" style="background:#e0f3fd;color:#006fa8">MKT · EFF</span>
+          <span class="hub-card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="intakes_50plus.html" class="hub-card">
+        <div class="hub-card-stripe" style="background:#1D9E75"></div>
+        <div class="hub-card-body">
+          <div class="hub-card-icon">🗓️</div>
+          <div class="hub-card-title">50+ Intakes SY27</div>
+          <div class="hub-card-desc">Intake clustering for 50+ students across 19 focus destinations. Weekly arrivals, destination × week heatmap, course mix, average duration.</div>
+        </div>
+        <div class="hub-card-foot">
+          <span class="hub-card-tag" style="background:#e2f4ed;color:#0d7a55">INT · SY27</span>
+          <span class="hub-card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="EF_Evals_Dashboard.html" class="hub-card">
+        <div class="hub-card-stripe" style="background:var(--blue)"></div>
+        <div class="hub-card-body">
+          <div class="hub-card-icon">🔬</div>
+          <div class="hub-card-title">EF Evals Dashboard</div>
+          <div class="hub-card-desc">Programme evaluation data and quality metrics across EF Adults destinations and course types.</div>
+        </div>
+        <div class="hub-card-foot">
+          <span class="hub-card-tag" style="background:#e0edf7;color:var(--blue)">Evals</span>
+          <span class="hub-card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
   </div>`;
 }
 
@@ -513,7 +645,7 @@ function renderSelector() {
       </div>
     </button>`).join('');
 
-  return `${topBar(false)}
+  return `${topBar(true, 'Segmented Sales Scripts')}
   <div class="hero">
     <h2>Sales Pitch <span>Simulator</span></h2>
     <p>Practice your EF Adults pitch with AI-powered customer personas. Each persona raises real objections from the v5.5 sales script. You get scored at the end.</p>
@@ -717,7 +849,8 @@ function clearKey() {
 
 function render() {
   const app = document.getElementById('app');
-  if (S.screen === 'setup') app.innerHTML = renderSetup();
+  if (S.screen === 'hub') app.innerHTML = renderHub();
+  else if (S.screen === 'setup') app.innerHTML = renderSetup();
   else if (S.screen === 'selector') app.innerHTML = renderSelector();
   else if (S.screen === 'chat') app.innerHTML = renderChat();
   else app.innerHTML = renderFeedback();

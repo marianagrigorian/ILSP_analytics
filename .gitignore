@@ -29,3 +29,6 @@
 # ── Re-include specific json files after *.json exclusion ──
 !package.json
 !vercel.json
+
+# ── Re-include the sales script docx for download link ──
+!EF_Adults_Sales_Scripts_v5.5.docx
