@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your EF Experience — Málaga</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:  #FF329B;
+      --blue:  #009EEB;
+      --navy:  #003C64;
+      --ink:   #1A1A2E;
+      --mid:   #6B7280;
+      --light: #F9FAFB;
+      --white: #FFFFFF;
+      --cream: #FFFBF4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--ink);
+      background: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ── PROTOTYPE BANNER ─────────────────────────────── */
+    .proto-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: var(--navy);
+      color: rgba(255,255,255,0.75);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 9px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .proto-bar .pill {
+      background: var(--pink);
+      color: white;
+      border-radius: 100px;
+      padding: 2px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    body { padding-top: 38px; }
+
+    /* ── NAV ──────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 38px;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--pink); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-btn.ghost {
+      background: transparent;
+      color: var(--navy);
+      border: 1.5px solid rgba(0,0,0,0.12);
+    }
+
+    .nav-btn.pink {
+      background: var(--pink);
+      color: white;
+      border: none;
+    }
+
+    .nav-btn.pink:hover { background: #e0007a; }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 92vh;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      background: url('https://a.storyblok.com/f/239725/1800x1360/1aa4a98e14/50plus_producthomepage_hero_eur-latam-id-vn-cn-tw-hk_studentswalking.png/m/1800x1360/filters:quality(80)') center/cover no-repeat;
+    }
+
+    .hero-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,20,40,0.78) 0%, rgba(0,20,40,0.12) 55%, transparent 100%);
+    }
+
+    /* Blob decoration (top right) */
+    .hero-blob {
+      position: absolute;
+      top: -60px;
+      right: -80px;
+      width: 420px;
+      height: 420px;
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      padding: 60px 56px;
+      max-width: 760px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.14);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 100px;
+      padding: 6px 16px 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      letter-spacing: 0.04em;
+      margin-bottom: 24px;
+    }
+
+    .hero-tag-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--pink);
+    }
+
+    .hero-h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 6vw, 74px);
+      font-weight: 400;
+      line-height: 1.10;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .hero-h1 em {
+      font-style: italic;
+      color: #FFB9D7;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.78);
+      max-width: 480px;
+      line-height: 1.75;
+      margin-bottom: 36px;
+    }
+
+    .hero-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-chip {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: white;
+    }
+
+    .hero-chip .chip-label {
+      color: rgba(255,255,255,0.55);
+      font-size: 10px;
+      display: block;
+      margin-bottom: 1px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── SHARED SECTION STYLES ────────────────────────── */
+    section { position: relative; overflow: hidden; }
+
+    .section-blob {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 100px 40px;
+    }
+
+    .inner.narrow { max-width: 780px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 20px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--pink);
+    }
+
+    h2.serif {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 400;
+      line-height: 1.20;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    h2.serif em { font-style: italic; color: var(--mid); }
+
+    /* ── SECTION: ADVISOR ─────────────────────────────── */
+    .s-advisor { background: var(--white); }
+
+    .advisor-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .advisor-card {
+      background: var(--light);
+      border-radius: 20px;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .advisor-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+    }
+
+    .advisor-card-info {
+      padding: 20px 20px 24px;
+    }
+
+    .advisor-card-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--navy);
+    }
+
+    .advisor-card-role {
+      font-size: 12px;
+      color: var(--mid);
+      margin-top: 3px;
+    }
+
+    .advisor-card-btn {
+      display: block;
+      margin: 14px 0 0;
+      background: var(--pink);
+      color: white;
+      border-radius: 100px;
+      padding: 10px 0;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .advisor-text-intro {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      font-style: italic;
+      color: var(--mid);
+      margin-bottom: 28px;
+      letter-spacing: 0.01em;
+    }
+
+    .advisor-letter {
+      font-size: 17px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: #333;
+    }
+
+    .advisor-letter p + p { margin-top: 22px; }
+
+    .advisor-sig {
+      margin-top: 32px;
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-style: italic;
+      color: var(--navy);
+    }
+
+    /* ── SECTION: WHAT AWAITS ─────────────────────────── */
+    .s-awaits { background: var(--cream); }
+
+    .awaits-pull {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 3.5vw, 34px);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.45;
+      color: var(--navy);
+      border-left: 3px solid var(--pink);
+      padding-left: 28px;
+      margin-bottom: 64px;
+      max-width: 700px;
+    }
+
+    .awaits-img-strip {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 56px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .awaits-img-strip img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .awaits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px 56px;
+    }
+
+    .awaits-item h3 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 10px;
+    }
+
+    .awaits-item p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.80;
+      color: #444;
+    }
+
+    /* ── SECTION: PROGRAM ─────────────────────────────── */
+    .s-program { background: var(--white); }
+
+    .prog-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .prog-card {
+      background: var(--light);
+      border-radius: 16px;
+      padding: 24px 20px;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .prog-card-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .prog-card-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .prog-card-sub {
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.55;
+    }
+
+    .prog-dates-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 14px;
+    }
+
+    .prog-dates {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .date-chip {
+      background: var(--light);
+      border: 1.5px solid rgba(0,0,0,0.08);
+      border-radius: 100px;
+      padding: 9px 22px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .date-chip.active {
+      background: rgba(255,50,155,0.08);
+      border-color: var(--pink);
+      color: var(--pink);
+      font-weight: 600;
+    }
+
+    .date-chip.active::before { content: '★ '; }
+
+    /* ── SECTION: VOICES ──────────────────────────────── */
+    .s-voices { background: var(--light); }
+
+    .voices-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .voice-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px 28px;
+      position: relative;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .voice-bg-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 96px;
+      line-height: 1;
+      color: var(--pink);
+      opacity: 0.09;
+      position: absolute;
+      top: 8px;
+      left: 20px;
+    }
+
+    .voice-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.70;
+      color: var(--ink);
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .voice-person {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .voice-ava {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .voice-ava-initials {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: white;
+    }
+
+    .voice-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .voice-detail { font-size: 11px; color: var(--mid); margin-top: 2px; }
+
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--navy);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .stat-cell {
+      padding: 36px 28px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .stat-cell:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 600;
+      color: var(--pink);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      color: rgba(255,255,255,0.50);
+      line-height: 1.55;
+    }
+
+    /* ── SECTION: INVESTMENT ──────────────────────────── */
+    .s-investment { background: var(--white); }
+
+    .inv-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .inv-price-block { text-align: right; flex-shrink: 0; }
+
+    .inv-from {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 4px;
+    }
+
+    .inv-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1;
+    }
+
+    .inv-price sup { font-size: 24px; vertical-align: super; }
+
+    .inv-note { font-size: 12px; color: var(--mid); margin-top: 4px; }
+
+    .inclusions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .inc-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 20px;
+      background: var(--light);
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .inc-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(0,60,100,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .inc-body strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 3px;
+    }
+
+    .inc-body span {
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.5;
+    }
+
+    .payment-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .payment-card {
+      background: var(--light);
+      border-radius: 14px;
+      padding: 22px 20px;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .payment-card.active {
+      border-color: var(--blue);
+      background: rgba(0,158,235,0.04);
+    }
+
+    .payment-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .payment-card p {
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.55;
+    }
+
+    .flex-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,158,235,0.07);
+      border: 1px solid rgba(0,158,235,0.18);
+      border-radius: 100px;
+      padding: 7px 18px;
+      font-size: 12px;
+      color: var(--blue);
+      font-weight: 500;
+    }
+
+    /* ── SECTION: NEXT STEP ───────────────────────────── */
+    .s-next {
+      background: var(--navy);
+      color: white;
+    }
+
+    .next-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 72px;
+      align-items: center;
+    }
+
+    .next-h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.2;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .next-h2 em { font-style: italic; color: var(--pink); }
+
+    .next-body {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.80;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 36px;
+    }
+
+    .cta-pink {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--pink);
+      color: white;
+      border-radius: 100px;
+      padding: 16px 32px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .cta-pink:hover { background: #e0007a; transform: translateY(-2px); }
+
+    .next-note {
+      margin-top: 16px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.30);
+    }
+
+    .consultant-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .consultant-photo {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+
+    .consultant-body {
+      padding: 28px 28px 32px;
+    }
+
+    .consultant-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: white;
+      margin-bottom: 2px;
+    }
+
+    .consultant-role {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+
+    .consultant-quote {
+      font-size: 13px;
+      line-height: 1.70;
+      color: rgba(255,255,255,0.55);
+      border-left: 2px solid rgba(255,50,155,0.40);
+      padding-left: 14px;
+      margin-bottom: 20px;
+    }
+
+    .consultant-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      background: rgba(0,158,235,0.10);
+      border: 1px solid rgba(0,158,235,0.20);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      background: #06111D;
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .foot-logo {
+      font-size: 14px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: -0.01em;
+    }
+
+    .foot-logo span { color: var(--pink); }
+
+    .foot-ref {
+      font-size: 11px;
+      color: rgba(255,255,255,0.20);
+    }
+
+    .foot-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .foot-links a {
+      font-size: 11px;
+      color: rgba(255,255,255,0.28);
+      text-decoration: none;
+    }
+
+    /* ── BLOB SVG STYLES ──────────────────────────────── */
+    .blob-svg { position: absolute; pointer-events: none; }
+
+    @media (max-width: 768px) {
+      .advisor-grid, .next-grid { grid-template-columns: 1fr; }
+      .prog-cards { grid-template-columns: 1fr 1fr; }
+      .voices-grid { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: 1fr 1fr; }
+      .awaits-img-strip { grid-template-columns: 1fr; }
+      .awaits-img-strip img:not(:first-child) { display: none; }
+      .inclusions, .payment-row { grid-template-columns: 1fr; }
+      .inv-header { flex-direction: column; align-items: flex-start; }
+      .inv-price-block { text-align: left; }
+      footer { flex-direction: column; gap: 14px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PROTOTYPE BANNER -->
+  <div class="proto-bar">
+    <span class="pill">PROTOTYPE</span>
+    <span>Personalised for: <strong style="color:white">Margaret H.</strong> · 4 weeks · Málaga, Spain · Spanish Intensive · Private room</span>
+    <span style="opacity:0.4">·</span>
+    <span>Requested 14 Jul 2026</span>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-logo">EF <span>Language Abroad</span></div>
+    <div class="nav-right">
+      <a class="nav-btn ghost" href="#">Catálogo gratis</a>
+      <a class="nav-btn pink" href="#">Hablar con un asesor →</a>
+    </div>
+  </nav>
+
+  <!-- ──────────────────────────────────────────
+       HERO
+  ─────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-img"></div>
+
+    <!-- Blob decoration -->
+    <svg class="hero-blob" viewBox="0 0 420 420" fill="none">
+      <ellipse cx="314" cy="100" rx="180" ry="200" fill="#FFB9D7" transform="rotate(-30 314 100)"/>
+      <ellipse cx="150" cy="60" rx="120" ry="140" fill="#DFF4FF" transform="rotate(-20 150 60)"/>
+      <ellipse cx="240" cy="200" rx="90" ry="110" fill="#FFE2A9" transform="rotate(15 240 200)"/>
+    </svg>
+
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="hero-tag-dot"></span>
+        Tu propuesta personal de experiencia
+      </div>
+
+      <h1 class="hero-h1">
+        Tus cuatro semanas<br><em>en Málaga,<br>Margaret.</em>
+      </h1>
+
+      <p class="hero-sub">
+        No es una lista de precios. Es lo que esas cuatro semanas van a significar para ti — antes de que veas el número.
+      </p>
+
+      <div class="hero-chips">
+        <div class="hero-chip">
+          <span class="chip-label">Destino</span>
+          Málaga, España
+        </div>
+        <div class="hero-chip">
+          <span class="chip-label">Duración</span>
+          4 semanas
+        </div>
+        <div class="hero-chip">
+          <span class="chip-label">Curso</span>
+          Español Intensivo
+        </div>
+        <div class="hero-chip">
+          <span class="chip-label">Alojamiento</span>
+          Habitación privada
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────
+       ADVISOR NOTE
+  ─────────────────────────────────────────── -->
+  <section class="s-advisor">
+    <!-- Blob top right -->
+    <svg class="blob-svg" style="top:-80px;right:-60px;width:360px;opacity:0.5" viewBox="0 0 375 250">
+      <ellipse cx="314" cy="128" rx="78" ry="78" fill="#F7F0FF"/>
+      <ellipse cx="236" cy="154" rx="44" ry="49" fill="#FFB9D7"/>
+      <ellipse cx="53" cy="117" rx="63" ry="76" fill="#DFF4FF"/>
+      <ellipse cx="143" cy="90" rx="47" ry="58" fill="#FFE2A9"/>
+      <ellipse cx="188" cy="117" rx="44" ry="42" fill="#FCDCD7"/>
+    </svg>
+
+    <div class="inner">
+      <div class="advisor-grid">
+
+        <div>
+          <div class="advisor-card">
+            <img class="advisor-photo"
+              src="https://a.storyblok.com/f/239725/2160x2160/9835579622/chf-chi-chd-markets_ef_staff_moana-dusci_01.png/m/600x800/filters:quality(80)"
+              alt="Sofía, tu asesora EF"
+              onerror="this.style.background='linear-gradient(135deg,#009EEB,#003C64)';this.removeAttribute('src')">
+            <div class="advisor-card-info">
+              <div class="advisor-card-name">Sofía Martínez</div>
+              <div class="advisor-card-role">Especialista EF · Región Ibérica</div>
+              <a class="advisor-card-btn" href="#">Reservar llamada →</a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="eyebrow">Una nota de tu asesora EF</div>
+          <p class="advisor-text-intro">Para Margaret, con cariño y muchas ganas de que vayas.</p>
+
+          <div class="advisor-letter">
+            <p>
+              Gracias por escribirnos, Margaret. Miré con atención lo que buscas — cuatro semanas, español, Málaga — y antes de hablar de precios, quiero contarte algo: he ayudado a cientos de personas que estaban exactamente donde estás tú, y las que van a Málaga no suelen volver solo con mejor español.
+            </p>
+            <p>
+              Vuelven distintas. Más ligeras. Me hablan del aula del segundo piso donde los jueves siempre se alargan porque nadie quiere irse. De las tardes de tapas que se convierten en amistades con las que todavía se escriben dos años después.
+            </p>
+            <p>
+              Por eso he preparado esto para ti: primero la experiencia, luego lo que cuesta. Creo que ese es el orden correcto.
+            </p>
+          </div>
+
+          <div class="advisor-sig">Sofía</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────
+       WHAT AWAITS YOU
+  ─────────────────────────────────────────── -->
+  <section class="s-awaits">
+    <svg class="blob-svg" style="bottom:-100px;left:-80px;width:480px;opacity:0.4" viewBox="0 0 375 250">
+      <ellipse cx="53" cy="117" rx="130" ry="160" fill="#FFE2A9"/>
+      <ellipse cx="143" cy="60" rx="100" ry="120" fill="#DFF4FF"/>
+    </svg>
+
+    <div class="inner">
+      <div class="eyebrow">Lo que te espera</div>
+
+      <p class="awaits-pull">
+        "Cuatro semanas es suficiente para dejar de traducir en tu cabeza — y demasiado corto para que no quieras repetir."
+      </p>
+
+      <div class="awaits-img-strip">
+        <img src="https://a.storyblok.com/f/239725/5760x2743/033d81bc20/01_50-_courses_hero_studentsandstaffinclassroom.png/m/1200x800/filters:quality(80)" alt="Clase de idiomas para adultos">
+        <img src="https://a.storyblok.com/f/239725/2880x2160/43102cafc2/01_mt_msj_activity_hero_studentsmiling.png/m/800x800/filters:quality(70)" alt="Estudiante adulta sonriendo">
+        <img src="https://a.storyblok.com/f/239725/1500x1073/2261c19e1a/04_gb_lon_gallery_activities_studentsinrestaurant.png/m/800x700/filters:quality(70)" alt="Estudiantes en restaurante">
+      </div>
+
+      <div class="awaits-grid">
+        <div class="awaits-item">
+          <h3>Tus mañanas</h3>
+          <p>
+            Las clases empiezan a las nueve. Tu grupo es de ocho personas, todos adultos, todos aquí por la misma razón. Tu profesora Carmen lleva once años haciéndolo y tiene el don de hacer que la gramática parezca inevitable. En la segunda semana empezarás a soñar en español.
+          </p>
+        </div>
+        <div class="awaits-item">
+          <h3>Tus tardes</h3>
+          <p>
+            Después de comer, la ciudad es tuya. El colegio organiza excursiones opcionales — el mercado semanal, una bodega en Ronda, una clase de cocina en el casco antiguo. Pero las mejores tardes serán las no planificadas: una conversación en un café que se convierte en dos horas.
+          </p>
+        </div>
+        <div class="awaits-item">
+          <h3>Tu habitación</h3>
+          <p>
+            Privada. Una habitación individual en una residencia EF a cinco minutos del colegio, con tu propia llave y tu propio espacio. El desayuno está incluido. Tener un lugar genuinamente cómodo al que volver cambia la energía de todo el viaje.
+          </p>
+        </div>
+        <div class="awaits-item">
+          <h3>Tu gente</h3>
+          <p>
+            El grupo de Málaga este otoño tiene entre 52 y 67 años. Vienen de Alemania, Italia, Suiza, Francia. Médicos, profesores jubilados, arquitectas que quieren vivir en España. En la segunda semana ya no son compañeros de clase. Son las personas a las que escribirás desde el aeropuerto de vuelta a casa.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────
+       YOUR PROGRAM
+  ─────────────────────────────────────────── -->
+  <section class="s-program">
+    <div class="inner">
+      <div class="eyebrow">Tu programa</div>
+      <h2 class="serif" style="margin-bottom:40px">Todo en un lugar, <em>nada que descifrar.</em></h2>
+
+      <div class="prog-cards">
+        <div class="prog-card">
+          <div class="prog-card-label">Destino</div>
+          <div class="prog-card-value">Málaga</div>
+          <div class="prog-card-sub">Andalucía, España<br>EF Escuela — Centro</div>
+        </div>
+        <div class="prog-card">
+          <div class="prog-card-label">Curso</div>
+          <div class="prog-card-value">Español Intensivo</div>
+          <div class="prog-card-sub">25 lecciones / semana<br>Solo adultos</div>
+        </div>
+        <div class="prog-card">
+          <div class="prog-card-label">Alojamiento</div>
+          <div class="prog-card-value">Residencia EF Privada</div>
+          <div class="prog-card-sub">Desayuno incluido<br>5 min andando al colegio</div>
+        </div>
+        <div class="prog-card">
+          <div class="prog-card-label">Duración</div>
+          <div class="prog-card-value">4 semanas</div>
+          <div class="prog-card-sub">Llegadas los domingos<br>Clases: lun–vier</div>
+        </div>
+      </div>
+
+      <p class="prog-dates-label">Fechas de inicio recomendadas para ti</p>
+      <div class="prog-dates">
+        <div class="date-chip active">5 octubre 2026</div>
+        <div class="date-chip">2 noviembre 2026</div>
+        <div class="date-chip">7 septiembre 2026</div>
+        <div class="date-chip">4 enero 2027</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────
+       VOICES
+  ─────────────────────────────────────────── -->
+  <section class="s-voices">
+    <svg class="blob-svg" style="top:-60px;right:-60px;width:380px;opacity:0.55" viewBox="0 0 375 250">
+      <circle cx="314" cy="15" r="78" fill="#F7F0FF"/>
+      <ellipse cx="250" cy="-5" rx="46" ry="65" fill="#FAE0F9"/>
+      <ellipse cx="222" cy="77" rx="44" ry="49" fill="#FFB5D5"/>
+      <circle cx="36" cy="55" r="76" fill="#DFF4FF"/>
+    </svg>
+
+    <div class="inner">
+      <div class="eyebrow">Lo que dicen los que fueron</div>
+      <h2 class="serif" style="margin-bottom:40px">Personas que fueron.<br><em>Lo que dicen de verdad.</em></h2>
+
+      <div class="voices-grid">
+        <div class="voice-card">
+          <div class="voice-bg-quote">"</div>
+          <p class="voice-text">
+            "Tenía 61 años y miedo de ser la más lenta. En la tercera semana era yo la que se quedaba hasta tarde para practicar. Ya he reservado para la próxima primavera — a otro destino esta vez."
+          </p>
+          <div class="voice-person">
+            <div class="voice-ava-initials" style="background:linear-gradient(135deg,#009EEB,#003C64)">H</div>
+            <div>
+              <div class="voice-name">Helene B., 63 años</div>
+              <div class="voice-detail">Profesora jubilada · Málaga, 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-bg-quote">"</div>
+          <p class="voice-text">
+            "Lo que no esperaba eran las noches. Nos sentábamos en la terraza con una copa de vino, cambiando entre cuatro idiomas, riendo. Nunca me he sentido menos sola viajando sola."
+          </p>
+          <div class="voice-person">
+            <div class="voice-ava-initials" style="background:linear-gradient(135deg,#FF329B,#003C64)">M</div>
+            <div>
+              <div class="voice-name">Martin K., 58 años</div>
+              <div class="voice-detail">Arquitecto · Málaga, 2024</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-bg-quote">"</div>
+          <p class="voice-text">
+            "Vine por el español. Lo conseguí. Pero también conseguí ocho amigos nuevos, una receta de salmorejo de verdad, y la primera semana en quince años en la que no pensé en el trabajo."
+          </p>
+          <div class="voice-person">
+            <div class="voice-ava-initials" style="background:linear-gradient(135deg,#F7C823,#C8860A)">C</div>
+            <div>
+              <div class="voice-name">Catherine R., 66 años</div>
+              <div class="voice-detail">Médica · Málaga, 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-strip">
+        <div class="stat-cell">
+          <div class="stat-num">50+</div>
+          <div class="stat-lbl">escuelas dedicadas<br>solo a adultos</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num">14%</div>
+          <div class="stat-lbl">crecimiento anual<br>en nuestra comunidad 50+</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num">1 de 3</div>
+          <div class="stat-lbl">estudiantes repite<br>en menos de un año</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-num">65 años</div>
+          <div class="stat-lbl">de inmersión en<br>idiomas para adultos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────
+       INVESTMENT
+  ─────────────────────────────────────────── -->
+  <section class="s-investment">
+    <svg class="blob-svg" style="bottom:-80px;left:-60px;width:350px;opacity:0.4" viewBox="0 0 375 250">
+      <ellipse cx="53" cy="117" rx="130" ry="150" fill="#FFEABD"/>
+      <ellipse cx="143" cy="90" rx="90" ry="110" fill="#FFB9D7"/>
+    </svg>
+
+    <div class="inner">
+      <div class="eyebrow">Tu inversión</div>
+
+      <div class="inv-header">
+        <h2 class="serif">Lo que cuestan esas cuatro semanas — <em>y lo que incluyen.</em></h2>
+        <div class="inv-price-block">
+          <div class="inv-from">Desde</div>
+          <div class="inv-price"><sup>€</sup>3.290</div>
+          <div class="inv-note">total · todo incluido · 4 semanas</div>
+        </div>
+      </div>
+
+      <div class="inclusions">
+        <div class="inc-item">
+          <div class="inc-icon">📚</div>
+          <div class="inc-body">
+            <strong>Curso de Español Intensivo</strong>
+            <span>25 lecciones por semana · Solo adultos · Alineado con el MCER · Evaluación de nivel al llegar</span>
+          </div>
+        </div>
+        <div class="inc-item">
+          <div class="inc-icon">🏠</div>
+          <div class="inc-body">
+            <strong>Habitación Privada · Residencia EF</strong>
+            <span>Uso individual · Desayuno diario · Ropa de cama y servicios incluidos</span>
+          </div>
+        </div>
+        <div class="inc-item">
+          <div class="inc-icon">🎯</div>
+          <div class="inc-body">
+            <strong>Programa de Actividades</strong>
+            <span>2–3 excursiones curadas por semana · Experiencias culturales · Tardes sociales con tu grupo</span>
+          </div>
+        </div>
+        <div class="inc-item">
+          <div class="inc-icon">🛡️</div>
+          <div class="inc-body">
+            <strong>Soporte EF 24/7</strong>
+            <span>Equipo dedicado en el campus · Preparación antes de salir · Línea de emergencias</span>
+          </div>
+        </div>
+        <div class="inc-item">
+          <div class="inc-icon">📜</div>
+          <div class="inc-body">
+            <strong>Certificado EF de finalización</strong>
+            <span>Reconocido internacionalmente · Referenciado en el MCER · Compartible en LinkedIn</span>
+          </div>
+        </div>
+        <div class="inc-item">
+          <div class="inc-icon">🌐</div>
+          <div class="inc-body">
+            <strong>Acceso a la Comunidad Alumni</strong>
+            <span>Grupo de WhatsApp 50+ · Eventos mensuales · Encuentros "¿A dónde vas ahora?"</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-row">
+        <div class="payment-card active">
+          <h4>Pago completo</h4>
+          <p>Paga hoy y reserva tu plaza para la fecha preferida. Asegura la tarifa actual.</p>
+        </div>
+        <div class="payment-card">
+          <h4>Pago en dos plazos</h4>
+          <p>Un depósito del 30% reserva tu plaza. El 70% restante se abona 8 semanas antes de salir.</p>
+        </div>
+        <div class="payment-card">
+          <h4>Reserva anticipada</h4>
+          <p>Reserva con 90+ días de antelación y obtén un 5% de descuento. Algunas fechas se agotan pronto.</p>
+        </div>
+      </div>
+
+      <div class="flex-badge">
+        ✓ &nbsp;Política de cambio flexible — cambia tu fecha hasta 35 días antes sin coste
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────
+       NEXT STEP
+  ─────────────────────────────────────────── -->
+  <section class="s-next">
+    <svg class="blob-svg" style="top:-40px;right:-80px;width:400px;opacity:0.08" viewBox="0 0 375 250">
+      <ellipse cx="300" cy="100" rx="200" ry="220" fill="#FFD56E"/>
+      <ellipse cx="150" cy="50" rx="150" ry="180" fill="#AAB3E9"/>
+    </svg>
+
+    <div class="inner">
+      <div class="next-grid">
+        <div>
+          <div class="eyebrow" style="color:var(--pink)">Tu próximo paso</div>
+          <h2 class="next-h2">Hablamos.<br><em>Veinte minutos.</em><br>Sin compromiso.</h2>
+          <p class="next-body">
+            Sofía ha ayudado a cientos de personas a planificar su primera experiencia EF. Conoce Málaga bien, puede responder cualquier pregunta con honestidad y no te presionará a tomar una decisión antes de que estés lista.
+            <br><br>
+            El mejor momento para hablar suele ser antes de haberlo decidido del todo.
+          </p>
+          <a class="cta-pink" href="#">Reservar llamada con Sofía →</a>
+          <p class="next-note">O responde directamente al email que te trajo aquí. Ella lo lee todo personalmente.</p>
+        </div>
+
+        <div>
+          <div class="consultant-card">
+            <img class="consultant-photo"
+              src="https://a.storyblok.com/f/239725/2160x2160/9835579622/chf-chi-chd-markets_ef_staff_moana-dusci_01.png/m/800x800/filters:quality(80)"
+              alt="Sofía Martínez"
+              onerror="this.style.height='200px';this.style.background='linear-gradient(135deg,#009EEB20,#FF329B20)';this.removeAttribute('src')">
+            <div class="consultant-body">
+              <div class="consultant-name">Sofía Martínez</div>
+              <div class="consultant-role">Especialista EF en Experiencias</div>
+              <p class="consultant-quote">
+                "Pasé tres años estudiando en España antes de unirme a EF. Sé exactamente cómo se siente llegar a un sitio nuevo donde no entiendes del todo el idioma — y sé lo que cambia al otro lado."
+              </p>
+              <div class="consultant-tags">
+                <span class="tag">Inmersión en español</span>
+                <span class="tag">Especialista Málaga</span>
+                <span class="tag">Viajeros solos</span>
+                <span class="tag">Programas 50+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-logo">EF <span>Language Abroad</span></div>
+    <div class="foot-ref">© 2026 EF Education First · Propuesta personal · Ref: EF-2026-MAL-4W-MH</div>
+    <div class="foot-links">
+      <a href="#">Política de privacidad</a>
+      <a href="#">Darse de baja</a>
+      <a href="#">ef.com.es</a>
+    </div>
+  </footer>
+
+</body>
+</html>
